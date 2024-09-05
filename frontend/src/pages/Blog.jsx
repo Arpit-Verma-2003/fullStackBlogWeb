@@ -1,6 +1,16 @@
-import React from 'react'
-
+import React,{useEffect,useState} from 'react'
+import { getBlogById } from '../../Api/Api';
+import { useParams } from 'react-router-dom';
 const Blog = () => {
+  const {id} = useParams();
+  const [blog,setBlog] = useState(null);
+  useEffect(()=>{
+    async function fetchData() {
+      const allBlogs = await getBlogById(id);
+      setBlog(allBlogs.data);
+    }
+    fetchData();
+  },[]);
   return (
     <div className='flex justify-center '>
         <div className='flex flex-col w-[70%] overflow-hidden'>

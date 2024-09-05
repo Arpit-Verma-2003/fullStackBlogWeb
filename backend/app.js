@@ -1,5 +1,6 @@
 const express = require('express')
 const multer  = require('multer')
+const cors = require('cors');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/')
@@ -15,18 +16,26 @@ const app = express()
 const port = 3000
 
 app.use(express.json());
-
+app.use(cors());
+app.use('/uploads',express.static('uploads'))
 app.get('/', (req, res) => {
   res.send('Helloadf Wordlad')
 })
 
 app.get('/blogs',async (req,res)=>{
     const result = await client.query(queries.getBlogs);
-    return res.json({"data":result.rows[0]});
+    return res.json({"data":result.rows});
 })
+
+app.get('/blogs/:id',async (req,res)=>{
+  const id = req.params.id;
+  const result = await client.query(queries.getBlogsById,[id]);
+  return res.json({"data":result.rows});
+})
+
 app.post('/blogs',async (req,res)=>{
-  const {author,title,image,post} = req.body;
-  const result = await client.query(queries.addBlogs,[author,title,image,post]);
+  const {author,title,image,post,category} = req.body;
+  const result = await client.query(queries.addBlogs,[author,title,image,post,category]);
   return res.json({"data":result.rowCount});
 })
 app.post('/blogsimage', upload.single('file'), function (req, res, next) {

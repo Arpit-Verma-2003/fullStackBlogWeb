@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Blogcard from '../components/Blogcard'
 import { Link } from 'react-router-dom'
-Link
+import { getBlogs } from '../../Api/Api'
 const Home = () => {
+  const [blogs,setBlogs] = useState(null);
+  useEffect(()=>{
+    async function fetchData() {
+      const allBlogs = await getBlogs();
+      setBlogs(allBlogs.data);
+    }
+    fetchData();
+  },[]);
   const data = [
     {
       title : 'This is the first blog',
@@ -89,7 +97,7 @@ const Home = () => {
     <>
       <Link to='/blog'>
         <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
-          {data.map(x=>{
+          {blogs && blogs.map(x=>{
             return <Blogcard blogData = {x}/>
           })}
         </div>
