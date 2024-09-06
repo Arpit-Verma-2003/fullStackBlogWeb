@@ -22,12 +22,13 @@ app.get('/', (req, res) => {
   res.send('Helloadf Wordlad')
 })
 
-app.get('/blogs',async (req,res)=>{
-    const result = await client.query(queries.getBlogs);
+app.get('/blogs/:cat',async (req,res)=>{
+    const result = await client.query(
+      req.params.cat !='all' ? `SELECT * FROM blogs WHERE category = '${req.params.cat}'`:queries.getBlogs);
     return res.json({"data":result.rows});
 })
 
-app.get('/blogs/:id',async (req,res)=>{
+app.get('/blogsbyid/:id',async (req,res)=>{
   const id = req.params.id;
   const result = await client.query(queries.getBlogsById,[id]);
   return res.json({"data":result.rows});

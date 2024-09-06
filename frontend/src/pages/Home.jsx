@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Blogcard from '../components/Blogcard'
 import { Link } from 'react-router-dom'
 import { getBlogs } from '../../Api/Api'
+import { useSearchParams } from "react-router-dom";
 const Home = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
   const [blogs,setBlogs] = useState(null);
   useEffect(()=>{
     async function fetchData() {
@@ -11,94 +13,20 @@ const Home = () => {
     }
     fetchData();
   },[]);
-  const data = [
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/201/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/202/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/203/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/204/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/209/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/206/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/210/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/208/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/id/209/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
-    },
-    {
-      title : 'This is the first blog',
-      image : 'https://picsum.photos/250/200',
-      description : 'This website is amazing',
-      createdon : '08 August , 2024',
-      author : 'Arpit Verma',
-      comments : "0"
+  useEffect(()=>{
+    async function fetchData() {
+      let category = searchParams.get('category');
+      const allBlogs = await getBlogs(category);
+      setBlogs(allBlogs.data);
     }
-  ]
+    fetchData();
+  },[searchParams]);
   return (
     <>
       <Link to='/blog'>
         <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
-          {blogs && blogs.map(x=>{
-            return <Blogcard blogData = {x}/>
+          {blogs && blogs.map((x,i)=>{
+            return <Blogcard key={i} blogData = {x}/>
           })}
         </div>
         </Link>

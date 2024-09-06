@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, Outlet } from 'react-router-dom'
-
 const Layout = () => {
   const menu = [
     {text:'Trending',path:'/'},
@@ -17,8 +16,8 @@ const Layout = () => {
           <div className="flex">
             <ul className="flex">
               {
-                menu.map(x=>{
-                  return <li className='p-2'><Link>{x.text}</Link></li>
+                menu.map((x,i)=>{
+                  return <li key={i} className='p-2'><Link to={`/?category=${x.text}`}>{x.text}</Link></li>
                 })
               }
             </ul>
