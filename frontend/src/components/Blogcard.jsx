@@ -16,5 +16,4 @@ const Blogcard = ({blogData}) => {
     </div>
   )
 }
-
 export default Blogcard

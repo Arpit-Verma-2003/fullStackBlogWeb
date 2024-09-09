@@ -23,13 +23,11 @@ const Home = () => {
   },[searchParams]);
   return (
     <>
-      <Link to='/blog'>
         <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
           {blogs && blogs.map((x,i)=>{
             return <Blogcard key={i} blogData = {x}/>
           })}
         </div>
-        </Link>
     </>
   )
 }
