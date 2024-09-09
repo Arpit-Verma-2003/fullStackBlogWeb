@@ -8,6 +8,7 @@ import Nopage from './components/Nopage';
 import Policy from './pages/Policy';
 import About from './pages/About';
 import Register from './pages/Register';
+import Login from './pages/Login';
 function App() {
 
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path='/about' element={<About/>}></Route>
             <Route path='/privacy-policy' element={<Policy/>}></Route>
             <Route path='/register' element={<Register/>}></Route>
+            <Route path='/login' element={<Login/>}></Route>
             <Route path='*' element={<Nopage/>}></Route>
           </Route>
         </Routes>
