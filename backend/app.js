@@ -60,13 +60,20 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.get('/blogs/:cat',async (req,res)=>{
+  const { cat } = req.params;
+  const { page = 1, limit = 9 } = req.query;
+  const offset = (page - 1) * limit;
+  const query = cat !== 'all' 
+  ? `SELECT * FROM blogs WHERE category = '${cat}' LIMIT ${limit} OFFSET ${offset}`
+  : `SELECT * FROM blogs LIMIT ${limit} OFFSET ${offset}`;
   console.log(req.session.user);
-    const result = await client.query(
-      req.params.cat !='all' ? `SELECT * FROM blogs WHERE category = '${req.params.cat}'`:queries.getBlogs);
-      if(req.session.user)  return res.json({"data":result.rows,"valid":true});
-      else{
-        return res.json({"data":result.rows,"valid":false});
-      }
+  try {
+    const result = await client.query(query);
+    const valid = !!req.session.user;
+    return res.json({ data: result.rows, valid });
+  } catch (err) {
+    return res.status(500).json({ error: 'Server Error' });
+  }
 })
 
 app.get('/blogsbyid/:id',async (req,res)=>{

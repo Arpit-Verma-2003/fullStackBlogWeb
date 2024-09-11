@@ -1,15 +1,10 @@
 import axios from "axios";
 const apiUrl = "http://localhost:3000";
-export const getBlogs = (cat) => {
-  if(!cat) cat = 'all';
+export const getBlogs = (cat = 'all', page = 1, limit = 9) => {
   return axios
-    .get(apiUrl + "/blogs/"+cat)
-    .then(result => {
-      return result.data;
-    })
-    .catch(err => {
-      return err;
-    });
+    .get(apiUrl + `/blogs/${cat}?page=${page}&limit=${limit}`)
+    .then(result => result.data)
+    .catch(err => err);
 };
 
 export const checkLogin = () => {

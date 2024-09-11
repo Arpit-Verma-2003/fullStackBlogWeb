@@ -8,6 +8,7 @@ const Blog = () => {
   const [blog,setBlog] = useState(null);
   const apiUrl = "http://localhost:3000/";
   useEffect(()=>{
+    window.scrollTo(0, 0);
     async function fetchData() {
       const allBlogs = await getBlogById(id);
       setBlog(allBlogs.data[0]);

@@ -3,7 +3,7 @@ import React from 'react';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gray-100 py-12">
+    <div className=" bg-gray-100 py-12">
       <div className="container mx-auto px-4">
         {/* About Section */}
         <div className="bg-white p-8 shadow-lg rounded-lg">
@@ -24,6 +24,24 @@ const About = () => {
 
           <p className="text-gray-700 leading-relaxed">
             We invite you to join us, whether as a reader, writer, or both, and be a part of this dynamic blogging platform. Create, share, and inspire with BlogPost!
+          </p>
+          <p className="text-gray-700 leading-relaxed">
+              We use the collected information for various purposes, including:
+              To personalize your experience: We may use your information to display content relevant to your interests.
+              To improve our website: We continually strive to improve our website and offerings based on the feedback and analytics we gather.
+              To communicate with you: We may use your contact details to respond to your inquiries, send you newsletters, and provide updates.
+              To enforce legal obligations: If required by law, we may disclose your information to comply with legal processes.
+              <br />
+              3. Cookies and Tracking Technologies
+              We use cookies and similar tracking technologies (such as web beacons and pixels) to enhance your experience.
+               Cookies are small text files that are placed on your device when you visit a website. You can control the use of cookies through your browser settings.
+              <br />
+              Some cookies we use include:
+              <br />
+              Essential Cookies: These are necessary for the website to function properly.
+              Analytics Cookies: These help us understand how users interact with our website.
+              <br />
+              4. Sharing of Your Information
           </p>
         </div>
       </div>

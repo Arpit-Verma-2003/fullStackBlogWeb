@@ -1,5 +1,4 @@
 const getBlogs = 'SELECT * FROM blogs';
-const getBlogsByCategory = 'SELECT * FROM blogs WHERE category = $1';
 const addBlogs = 'INSERT INTO blogs(author,title,image,post,category,author_id) VALUES($1,$2,$3,$4,$5,$6)';
 const getBlogsById = 'SELECT * FROM blogs WHERE id = $1';
 const addUser = 'INSERT INTO users(username,email,password,role_id) VALUES($1,$2,$3,$4)';
@@ -12,7 +11,6 @@ module.exports = {
     getBlogs,
     addBlogs,
     getBlogsById,
-    getBlogsByCategory,
     addUser,
     findUserByUsername,
     findUserByEmail,
