@@ -8,6 +8,7 @@ const Login = () => {
     password: ""
   });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,15 +18,16 @@ const Login = () => {
       [name]: value
     });
   };
-
+axios.defaults.withCredentials = true;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axios.post('http://localhost:3000/api/login', formData);
+      setSuccess("Login Successful Redirecting To Home Page");
       setTimeout(() => {
         navigate('/');
-      }, 3000);
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Error logging in");
     }
@@ -34,6 +36,7 @@ const Login = () => {
   return (
     <div className="flex flex-col items-center p-6">
       <h2 className="font-bold text-xl mb-4">Login</h2>
+      {success && <p className="text-blue-600 mb-4">{success}</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-4">
@@ -62,7 +65,6 @@ const Login = () => {
         </div>
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
       </form>
-      <Link to='/register' className='text-blue-700 py-5'>New User , Want to Register ? Click Me</Link>
     </div>
   );
 };

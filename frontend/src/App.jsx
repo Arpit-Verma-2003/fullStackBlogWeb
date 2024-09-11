@@ -9,6 +9,7 @@ import Policy from './pages/Policy';
 import About from './pages/About';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Myblogs from './pages/Myblogs';
 function App() {
 
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path='/privacy-policy' element={<Policy/>}></Route>
             <Route path='/register' element={<Register/>}></Route>
             <Route path='/login' element={<Login/>}></Route>
+            <Route path='/myblogs' element={<Myblogs/>}></Route>
             <Route path='*' element={<Nopage/>}></Route>
           </Route>
         </Routes>

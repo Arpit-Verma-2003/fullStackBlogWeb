@@ -2,7 +2,8 @@ const express = require('express')
 const multer  = require('multer')
 const cors = require('cors');
 const flash = require("express-flash");
-// const session = require('express-session');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 // const pgSession = require('connect-pg-simple')(session);
 const bcrypt = require("bcrypt");
 const storage = multer.diskStorage({
@@ -16,34 +17,56 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 const client = require('./db/connection');
 const queries = require("./db/queries");
+const bodyParser = require('body-parser');
 const app = express()
 const port = 3000
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173"],
+  methods: ["POST","GET","DELETE","PUT"],
+  credentials: true 
+}));
 app.use('/uploads',express.static('uploads'));
+app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(flash());
-// app.use(session({
-//   store: new pgSession({
-//     pool: client,  // PostgreSQL client
-//     tableName: 'session', // Optional, defaults to 'session'
-//   }),
-//   secret: 'secretitis', // Change to a strong secret key
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     maxAge: 1000 * 60 * 60 * 24 // 1 day
-//   }
-// }));
-
+app.use(session({
+  secret:'secret',
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+    secure:false,
+    maxAge: 1000*60*60*24
+  }
+}))
 app.get('/', (req, res) => {
   res.send('Helloadf Wordlad')
 })
 
+app.get('/checkLogin',async (req,res)=>{
+      if(req.session.user)  return res.json({"valid":true,"role":req.session.user.role});
+      else return res.json({"valid":false,});
+})
+
+app.post('/api/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Logout failed', error: err });
+    }
+    res.clearCookie('connect.sid'); // Clear the cookie stored in the user's browser
+    return res.status(200).json({ message: 'Logout successful' });
+  });
+});
+
 app.get('/blogs/:cat',async (req,res)=>{
+  console.log(req.session.user);
     const result = await client.query(
       req.params.cat !='all' ? `SELECT * FROM blogs WHERE category = '${req.params.cat}'`:queries.getBlogs);
-    return res.json({"data":result.rows});
+      if(req.session.user)  return res.json({"data":result.rows,"valid":true});
+      else{
+        return res.json({"data":result.rows,"valid":false});
+      }
 })
 
 app.get('/blogsbyid/:id',async (req,res)=>{
@@ -52,9 +75,17 @@ app.get('/blogsbyid/:id',async (req,res)=>{
   return res.json({"data":result.rows});
 })
 
+app.get('/author/blogs', async (req, res) => {
+  if(req.session.user){
+    const userId = req.session.user.id;
+    const result = await client.query(queries.getBlogsByAuthorId, [userId]);
+    return res.json({ valid: true, data: result.rows });
+  }
+});
+
 app.post('/blogs',async (req,res)=>{
   const {author,title,image,post,category} = req.body;
-  const result = await client.query(queries.addBlogs,[author,title,image,post,category]);
+  const result = await client.query(queries.addBlogs,[author,title,image,post,category,req.session.user.id]);
   return res.json({"data":result.rowCount});
 })
 app.post('/blogsimage', upload.single('file'), function (req, res, next) {
@@ -62,6 +93,18 @@ app.post('/blogsimage', upload.single('file'), function (req, res, next) {
   // req.body will hold the text fields, if there were any
   res.json(req.file);
 })
+
+app.delete('/api/blogs/:id', async (req, res) => {
+  const blogId = req.params.id;
+  const userId = req.session.user.id; 
+    const result = await client.query('DELETE FROM blogs WHERE id = $1 AND author_id = $2 RETURNING *', [blogId, userId]);
+    if (result.rows.length > 0) {
+      res.json({ valid: true, message: "Blog deleted" });
+    } else {
+      res.status(403).json({ valid: false, message: "Unauthorized" });
+    } 
+});
+
 
 app.post('/api/register',async (req,res)=>{
   const {username,email,password,confirm_password,role} = req.body;
@@ -86,10 +129,8 @@ app.post('/api/register',async (req,res)=>{
     res.status(500).json({ message: 'Error registering user.' });
   }
 })
-
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
-  
   try {
     const userResult = await client.query(queries.findUserByEmail, [email]);
     
@@ -104,13 +145,19 @@ app.post('/api/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid password" });
     }
-    // Save user info in session
-    // req.session.user = {
-    //   id: user.id,
-    //   username: user.username,
-    //   role: user.role_id
-    // };
-    return res.status(200).json({ message: "Login successful", user });
+    req.session.user = {
+      id: user.id,
+      username: user.username,
+      role: user.role_id
+    };
+    userConst = req.session.user;
+    console.log(req.session.user);
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+      }
+      return res.status(200).json({ message: "Login successful", userDetails: req.session.user });
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error logging in' });

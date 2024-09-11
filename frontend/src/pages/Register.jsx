@@ -24,7 +24,7 @@ const Register = () => {
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:3000/api/register', formData);
-            setSuccess("You are successfully registered , redirecting you to login page");
+            setSuccess("The User is Successfully Registered!");
             setFormData({
                 username: "",
                 email: "",
@@ -32,9 +32,6 @@ const Register = () => {
                 confirm_password: "",
                 role: "reader"
             });
-            setTimeout(()=>{
-                navigate('/login');
-            },3000)
             setError(null);
         } catch (err) {
             if (err.response && err.response.data.message) {
@@ -110,11 +107,12 @@ const Register = () => {
                     >
                         <option value="reader">Reader</option>
                         <option value="author">Author</option>
+                        <option value="admin">Admin</option>
                     </select>
                 </div>
                 <button type="submit" className='bg-blue-500 text-white px-4 py-2 rounded'>Register</button>
             </form>
-            <Link to='/login' className='text-blue-700 py-5'>Already a User ? Wanna Login , Click Me</Link>
+            {/* <Link to='/login' className='text-blue-700 py-5'>Already a User ? Wanna Login , Click Me</Link> */}
         </div>
     );
 }

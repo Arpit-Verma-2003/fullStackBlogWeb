@@ -12,6 +12,40 @@ export const getBlogs = (cat) => {
     });
 };
 
+export const checkLogin = () => {
+  return axios
+    .get(apiUrl + "/checklogin")
+    .then(result => {
+      return result.data;
+    })
+    .catch(err => {
+      return err;
+    });
+};
+
+export const deleteBlog = async (blogId) => {
+  try {
+    const response = await axios.delete(`${apiUrl}/api/blogs/${blogId}`,{
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting blog', error);
+    return { valid: false };
+  }
+};
+
+export const getBlogsByAuthor = () => {
+  return axios
+    .get(apiUrl + "/author/blogs")
+    .then(result => {
+      return result.data;
+    })
+    .catch(err => {
+      return err;
+    });
+};
+
 export const postBlogs = (data) => {
   return axios
     .post(apiUrl + "/blogs", data)
