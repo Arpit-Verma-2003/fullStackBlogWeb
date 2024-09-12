@@ -14,6 +14,7 @@ const Layout = () => {
       const checkLogined = await checkLogin();
       if(!checkLogined.valid){
         console.log("You are not logined");
+        navigate('/login');
       }
       else{
         if(checkLogined.role === 2 ){

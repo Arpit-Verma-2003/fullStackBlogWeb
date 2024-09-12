@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { getBlogById, getCommentsByBlogId, getUserId, handleCommentSubmit } from '../../Api/Api';
+import { deleteComment, getBlogById, getCommentsByBlogId, getUserId, handleCommentSubmit } from '../../Api/Api';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import dateFormat from "dateformat";
@@ -45,10 +45,9 @@ const Blog = () => {
       } catch (error) {
         console.error("Error deleting comment:", error);
       }
-    }
+    }else return;
   };
 
-  console.log(blog);
   return (
     <div className='flex justify-center items-center'>
         {blog && <div className='flex flex-col w-[70%] overflow-hidden'>

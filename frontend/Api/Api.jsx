@@ -54,7 +54,9 @@ export const getUserId = async()=>{
 export const deleteComment = async (commentId, userId) => {
   try {
     const response = await axios.delete(`${apiUrl}/comments/${commentId}`, {
-      data: { user_id: userId }
+      data: { user_id: userId,
+        comment_id:commentId
+       }
     });
     return response;
   } catch (error) {

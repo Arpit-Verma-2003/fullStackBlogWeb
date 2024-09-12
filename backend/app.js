@@ -50,9 +50,9 @@ app.get('/checkLogin',async (req,res)=>{
 })
 
 app.get('/userId',(req,res) => {
-  if(req.session.id){
+  if(req.session.user){
     return res.json({"userId":req.session.user.id});
-  }
+  }else return res.json({"valid":false});
 })
 
 app.get('/checkAdmin',(req,res)=>{
@@ -88,11 +88,10 @@ app.post('/comments',async(req,res)=>{
 })
 
 app.delete('/comments/:commentId', async (req, res) => {
-  const { commentId } = req.params;
-  const userId = req.body.user_id; // Assuming the user_id is sent in the request body
+  const userId = req.body.user_id;
+  const commentId = req.body.comment_id;
 
   try {
-    // Check if the comment exists and if the user is the owner
     const result = await client.query('SELECT * FROM comments WHERE id = $1', [commentId]);
     const comment = result.rows[0];
 
@@ -100,7 +99,6 @@ app.delete('/comments/:commentId', async (req, res) => {
       return res.status(403).json({ message: 'You can only delete your own comments.' });
     }
 
-    // Delete the comment
     await client.query('DELETE FROM comments WHERE id = $1', [commentId]);
     res.status(200).json({ message: 'Comment deleted successfully.' });
   } catch (error) {
@@ -126,7 +124,6 @@ app.get('/blogs/:cat',async (req,res)=>{
   const query = cat !== 'all' 
   ? `SELECT * FROM blogs WHERE category = '${cat}' LIMIT ${limit} OFFSET ${offset}`
   : `SELECT * FROM blogs LIMIT ${limit} OFFSET ${offset}`;
-  console.log(req.session.user);
   try {
     const result = await client.query(query);
     const valid = !!req.session.user;
@@ -218,7 +215,6 @@ app.post('/api/login', async (req, res) => {
       role: user.role_id
     };
     userConst = req.session.user;
-    console.log(req.session.user);
     req.session.save((err) => {
       if (err) {
         console.error("Session save error:", err);
