@@ -1,20 +1,53 @@
 import React,{useEffect,useState} from 'react'
-import { getBlogById } from '../../Api/Api';
+import { getBlogById, getCommentsByBlogId, getUserId, handleCommentSubmit } from '../../Api/Api';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import dateFormat from "dateformat";
 const Blog = () => {
   const {id} = useParams();
   const [blog,setBlog] = useState(null);
+  const [comments,setComments] = useState([]);
+  const [newComment,setNewComment] = useState("");
+  const [userId,setUserId] = useState(null);
   const apiUrl = "http://localhost:3000/";
   useEffect(()=>{
     window.scrollTo(0, 0);
     async function fetchData() {
       const allBlogs = await getBlogById(id);
       setBlog(allBlogs.data[0]);
+      const commentsData = await getCommentsByBlogId(id);
+      setComments(commentsData.data);
+      const uid = await getUserId();
+      setUserId(uid.userId);
     }
     fetchData();
   },[]);
+
+  const handleCommentSubmitFunction = async ()=>{
+    if(newComment.trim()===""){
+      alert("You can't add an empty comment");
+      return;
+    }
+    await handleCommentSubmit(id,userId, newComment);
+    alert("Comment Added Successfully");
+    setNewComment(''); 
+    const commentsData = await getCommentsByBlogId(id);
+    setComments(commentsData.data);
+  }
+
+  const handleCommentDelete = async (commentId) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      try {
+        await deleteComment(commentId, userId);
+        alert("Comment Deleted Successfully");
+        const commentsData = await getCommentsByBlogId(id);
+        setComments(commentsData.data);
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+      }
+    }
+  };
+
   console.log(blog);
   return (
     <div className='flex justify-center items-center'>
@@ -28,6 +61,38 @@ const Blog = () => {
             
             <div className='justify-start mt-5'>
               {parse(blog.post)}
+            </div>
+            <div className='comments-section mt-10 p-5 border-t-2 border-gray-300 bg-gray-100 rounded-lg shadow-lg'>
+              <h2 className='text-2xl font-bold mb-4 text-gray-700'>Comments - </h2>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className='w-full p-3 mb-3 border border-gray-300 rounded-lg shadow-md'
+              />
+              <button onClick={handleCommentSubmitFunction} className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 mb-3'>Add Comment</button>
+              {comments.length > 0 ? (
+              <ul className='space-y-4'>
+                {comments.map((comment, i) => (
+                  <li key={i} className='p-4 bg-white border border-gray-300 rounded-lg'>
+                    <p className='text-sm text-gray-600'>
+                      <strong className='text-gray-800'>{comment.username}</strong>: {comment.content}
+                    </p>
+                    <p className='text-xs text-gray-500 mt-2'>{new Date(comment.created_at).toLocaleString()}</p>
+                    {userId == comment.user_id && (
+                      <button
+                        onClick={() => handleCommentDelete(comment.id)}
+                        className='mt-2 text-red-500 hover:text-red-700'
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className='text-gray-600'>No comments yet. Be the first to comment!</p>
+            )}
             </div>
         </div>}
     </div>

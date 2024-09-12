@@ -18,6 +18,60 @@ export const checkLogin = () => {
     });
 };
 
+export const checkAdmin = () =>{
+  return axios.get(apiUrl+"/checkAdmin")
+  .then(result=>{
+    return result.data;
+  })
+  .catch(err=>{
+    return err;
+  })
+}
+
+export const handleCommentSubmit = async (blogId, userId, content) => {
+  try {
+    const response = await axios.post(apiUrl+'/comments', {
+      blog_id: blogId,
+      user_id: userId,
+      content: content
+    });
+    return response;
+  } catch (error) {
+    console.error("Error submitting comment:", error);
+    throw error;
+  }
+};
+
+export const getUserId = async()=>{
+  try {
+    const response = await axios.get(apiUrl+'/userId')
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const deleteComment = async (commentId, userId) => {
+  try {
+    const response = await axios.delete(`${apiUrl}/comments/${commentId}`, {
+      data: { user_id: userId }
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    throw error;
+  }
+};
+
+export const getCommentsByBlogId = async(blogId)=>{
+  try {
+    const response = await axios.get(apiUrl+`/comments/${blogId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const deleteBlog = async (blogId) => {
   try {
     const response = await axios.delete(`${apiUrl}/api/blogs/${blogId}`,{

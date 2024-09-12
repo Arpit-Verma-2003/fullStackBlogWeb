@@ -1,6 +1,7 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { checkAdmin } from '../../Api/Api';
 const Register = () => {
     const [formData, setFormData] = useState({
         username: "",
@@ -12,6 +13,17 @@ const Register = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        async function checkAdminFunction() {
+            const res = await checkAdmin();
+            if(!res.valid) navigate('/');
+            if(!res.login) navigate('/login')
+        }
+        checkAdminFunction();
+    }, [])
+    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -35,9 +47,9 @@ const Register = () => {
             setError(null);
         } catch (err) {
             if (err.response && err.response.data.message) {
-                setError(err.response.data.message);  // Display specific error message
+                setError(err.response.data.message);
             } else {
-                setError("Error Registering The User");  // Fallback error message
+                setError("Error Registering The User");
             }
             setSuccess(null);
         }

@@ -49,6 +49,66 @@ app.get('/checkLogin',async (req,res)=>{
       else return res.json({"valid":false,});
 })
 
+app.get('/userId',(req,res) => {
+  if(req.session.id){
+    return res.json({"userId":req.session.user.id});
+  }
+})
+
+app.get('/checkAdmin',(req,res)=>{
+  if(req.session.user){
+    if(req.session.user.role == 1){
+      return res.json({"valid":true,"login":true});
+    }
+    return res.json({"valid":false,"login":true});
+  }else{
+    return res.json({"valid":false,"login":false});
+  }
+})
+
+app.get('/comments/:blogId',async(req,res)=>{
+  const {blogId} = req.params;
+  try {
+    const result = await client.query(queries.getComments,[blogId]);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(500).json({message:"error fetching the comments"});
+  }
+})
+
+app.post('/comments',async(req,res)=>{
+  const{blog_id,user_id,content} = req.body;
+  try {
+    await client.query(queries.addComment,[blog_id,user_id,content]);
+    res.status(201).json({message:"successfully added comment"});
+  } catch (error) {
+    console.error("err",error);
+    res.status(500).json({message:"error in adding comment"});
+  }
+})
+
+app.delete('/comments/:commentId', async (req, res) => {
+  const { commentId } = req.params;
+  const userId = req.body.user_id; // Assuming the user_id is sent in the request body
+
+  try {
+    // Check if the comment exists and if the user is the owner
+    const result = await client.query('SELECT * FROM comments WHERE id = $1', [commentId]);
+    const comment = result.rows[0];
+
+    if (comment.user_id !== userId) {
+      return res.status(403).json({ message: 'You can only delete your own comments.' });
+    }
+
+    // Delete the comment
+    await client.query('DELETE FROM comments WHERE id = $1', [commentId]);
+    res.status(200).json({ message: 'Comment deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    res.status(500).json({ message: 'Error deleting comment.' });
+  }
+});
+
 app.post('/api/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
