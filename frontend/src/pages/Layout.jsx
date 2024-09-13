@@ -70,7 +70,8 @@ const Layout = () => {
              <Link to={'/create'}>{checkButtonAccess && <button className='bg-blue-600 text-white rounded p-1 mr-3'>Add Blog</button>} </Link>
              <Link to={'/myblogs'}>{checkButtonAccess && <button className='bg-blue-600 text-white rounded p-1 mr-3'>My Blogs</button>} </Link>
              <Link to={'/register'}>{checkAdminAccess && <button className='bg-blue-600 text-white rounded p-1 mr-3'>Create User</button>} </Link>
-             <button onClick={handleLogout} className='bg-red-600 text-white rounded p-1'>Logout</button>
+             <button onClick={handleLogout} className='bg-red-600 text-white rounded p-1 mr-3'>Logout</button>
+             <Link to={'/profile'}><img src="/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile" className='w-[35px]'/></Link>
           </div>}
         </div>
       </div>

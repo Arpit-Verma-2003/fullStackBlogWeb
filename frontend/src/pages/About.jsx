@@ -1,7 +1,10 @@
 // src/pages/About.js
-import React from 'react';
-
+import React, { useEffect } from 'react';
 const About = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+  
   return (
     <div className=" bg-gray-100 py-12">
       <div className="container mx-auto px-4">

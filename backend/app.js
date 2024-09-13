@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/checkLogin',async (req,res)=>{
-      if(req.session.user)  return res.json({"valid":true,"role":req.session.user.role});
+      if(req.session.user)  return res.json({"valid":true,"role":req.session.user.role,"username":req.session.user.username});
       else return res.json({"valid":false,});
 })
 

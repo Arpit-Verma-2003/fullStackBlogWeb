@@ -10,6 +10,7 @@ const Home = () => {
   const category = searchParams.get('category') || 'all';
   const navigate = useNavigate();
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchData = async () => {
       const response = await getBlogs(category, 1);
       if (!response.valid) {
