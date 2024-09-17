@@ -1,0 +1,91 @@
+import React, { useEffect, useState } from 'react'
+import { createRole, getPermissions } from '../../Api/Api'
+const Createrole = () => {
+    const [permissions, setPermissions] = useState([]);
+    const [roleName, setRoleName] = useState('');
+    const [selectedPermissions, setSelectedPermissions] = useState([]);
+    useEffect(() => {
+        const fetchPermissions = async ()=>{
+            const permissions_data = await getPermissions();
+            setPermissions(permissions_data);
+        }
+        fetchPermissions();
+      }, [])
+
+      const handlePermissionChange = (permissionId) => {
+        if (selectedPermissions.includes(permissionId)) {
+          setSelectedPermissions(selectedPermissions.filter((id) => id !== permissionId));
+        } else {
+          setSelectedPermissions([...selectedPermissions, permissionId]);
+        }
+      };
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        const newRole = {
+            roleName,
+            permissionIds : selectedPermissions
+        };
+        try {
+            await createRole(newRole);
+            alert('Role created successfully!');
+            setRoleName('');
+            setSelectedPermissions([]);
+          } catch (err) {
+            console.error('Error creating role:', err);
+            alert('Failed to create role');
+          }
+    }
+    return (
+        <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+          <h2 className="text-2xl font-bold mb-4">Create New Role</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="roleName" className="block text-sm font-medium text-gray-700">
+                Role Name:
+              </label>
+              <input
+                id="roleName"
+                type="text"
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
+                required
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
+              />
+            </div>
+            <div>
+              <h4 className="mb-2">Select Permissions:</h4>
+              <div className="space-y-2">
+                {permissions.map((permission) => (
+                  <div key={permission.id} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`permission-${permission.id}`}
+                      value={permission.id}
+                      checked={selectedPermissions.includes(permission.id)}
+                      onChange={() => handlePermissionChange(permission.id)}
+                      className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    />
+                    <label
+                      htmlFor={`permission-${permission.id}`}
+                      className="ml-2 text-sm font-medium text-gray-700"
+                    >
+                      {permission.permission_name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                Create Role
+              </button>
+            </div>
+          </form>
+        </div>
+      );
+    };
+    
+    export default Createrole;

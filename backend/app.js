@@ -66,6 +66,15 @@ app.get('/checkAdmin',(req,res)=>{
   }
 })
 
+app.get('/roles',async (req,res)=>{
+  try {
+    const result = await client.query(queries.getRoles);
+    return res.status(201).json(result.rows);
+  } catch (error) {
+    return res.json({message:"error fetching the roles"});
+  }
+})
+
 app.get('/comments/:blogId',async(req,res)=>{
   const {blogId} = req.params;
   try {
@@ -73,6 +82,29 @@ app.get('/comments/:blogId',async(req,res)=>{
     res.status(200).json(result.rows);
   } catch (error) {
     res.status(500).json({message:"error fetching the comments"});
+  }
+})
+
+app.get('/permissions',async(req,res)=>{
+  try {
+    const result = await client.query(queries.getPermissions);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(500).json({message:"unable to fetch the permissions"});
+  }
+})
+
+app.post('/roles',async(req,res)=>{
+  const {roleName,permissionIds} = req.body;
+  try {
+    const result = await client.query(queries.addRole,[roleName]);
+    const roleId = result.rows[0].id;
+    for(const permissionId of permissionIds){
+      await client.query(queries.addRoleWPermissions,[roleId,permissionId]);
+    }
+    res.status(201).json({message:"added a new role successfully"});
+  } catch (error) {
+    res.status(500).json({message:"unable to add the new role",err:error});
   }
 })
 

@@ -8,6 +8,10 @@ const findUserByRole = 'SELECT id FROM roles WHERE role_name = $1'
 const getBlogsByAuthorId = 'SELECT * FROM blogs WHERE author_id = $1'
 const addComment = 'INSERT INTO comments(blog_id,user_id,content) VALUES($1,$2,$3)';
 const getComments = 'SELECT comments.id,comments.content,comments.user_id, users.username, comments.created_at FROM comments JOIN users ON comments.user_id = users.id WHERE blog_id = $1';
+const getPermissions = 'SELECT * FROM permissions';
+const addRole = 'INSERT INTO roles(role_name) VALUES($1) RETURNING id';
+const addRoleWPermissions = 'INSERT INTO roles_permissions(role_id,permission_id) VALUES($1,$2)';
+const getRoles = 'SELECT role_name FROM roles';
 module.exports = {
     getBlogs,
     addBlogs,
@@ -18,5 +22,9 @@ module.exports = {
     findUserByRole,
     getBlogsByAuthorId,
     addComment,
-    getComments
+    getComments,
+    getPermissions,
+    addRole,
+    addRoleWPermissions,
+    getRoles
 }

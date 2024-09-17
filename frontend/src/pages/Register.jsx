@@ -12,7 +12,19 @@ const Register = () => {
     });
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [roles,setRoles] = useState([]);
     const navigate = useNavigate();
+
+
+    const fetchRoles = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/roles');
+            setRoles(response.data);
+            console.log(roles);
+        } catch (err) {
+            setError("Failed to fetch roles.");
+        }
+    };
 
     useEffect(() => {
         async function checkAdminFunction() {
@@ -21,6 +33,7 @@ const Register = () => {
             if(!res.login) navigate('/login')
         }
         checkAdminFunction();
+        fetchRoles();
     }, [])
     
 
@@ -117,9 +130,9 @@ const Register = () => {
                         onChange={handleChange}
                         className='border rounded px-3 py-2 w-full'
                     >
-                        <option value="reader">Reader</option>
-                        <option value="author">Author</option>
-                        <option value="admin">Admin</option>
+                        {roles.map(role => (
+                            <option key={role.id} value={role.id}>{role.role_name}</option>
+                        ))}
                     </select>
                 </div>
                 <button type="submit" className='bg-blue-500 text-white px-4 py-2 rounded'>Register</button>

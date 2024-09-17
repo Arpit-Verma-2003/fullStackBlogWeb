@@ -18,6 +18,27 @@ export const checkLogin = () => {
     });
 };
 
+export const createRole = async (newRole) => {
+  try {
+    const response = await axios.post(apiUrl+ '/roles', newRole);
+    return response.data;
+  } catch (err) {
+    console.error('Error creating role:', err);
+    throw err;  // Re-throw to handle error in handleSubmit
+  }
+};
+
+export const getPermissions = async ()=>{
+  try {
+    return await axios.get(apiUrl+'/permissions')
+    .then(result=>{
+      return result.data;
+    })
+  } catch (err) {
+    console.error('Error fetching permissions:', err);
+  }
+}
+
 export const checkAdmin = () =>{
   return axios.get(apiUrl+"/checkAdmin")
   .then(result=>{
