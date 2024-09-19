@@ -137,7 +137,6 @@ const Register = () => {
                 </div>
                 <button type="submit" className='bg-blue-500 text-white px-4 py-2 rounded'>Register</button>
             </form>
-            {/* <Link to='/login' className='text-blue-700 py-5'>Already a User ? Wanna Login , Click Me</Link> */}
         </div>
     );
 }

@@ -7,6 +7,7 @@ const Layout = () => {
   const [checkButtonAccess, setCheckButtonAccess] = useState(false);
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
   const [checkAdminAccess, setCheckAdminAccess] = useState(false);
+  const [permissions,setPermissions] = useState([]);
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
   useEffect(()=>{
@@ -17,14 +18,9 @@ const Layout = () => {
         navigate('/login');
       }
       else{
-        if(checkLogined.role === 2 ){
-          setCheckButtonAccess(true);
-        }
-        if(checkLogined.role === 1){
-          setCheckAdminAccess(true);
-        }
         setCheckLoginAccess(true);
-        console.log("You are logined");
+        setPermissions(checkLogined.permissions);
+        console.log("You are logined",checkLogined.permissions);
       } 
     }
     fetchData();
@@ -53,6 +49,7 @@ const Layout = () => {
     {text:'Sports',path:'/'},
     {text:'Politics',path:'/'}
   ]
+  const hasPermission = (permissionName) => permissions.includes(permissionName);
   return (
     <>
       {/* header */}
@@ -67,9 +64,9 @@ const Layout = () => {
                 })
               }
             </ul>
-             <Link to={'/create'}>{checkButtonAccess && <button className='bg-green-600 text-white rounded p-1 mr-3'>Add Blog</button>} </Link>
-             <Link to={'/myblogs'}>{checkButtonAccess && <button className='bg-blue-600 text-white rounded p-1 mr-3'>My Blogs</button>} </Link>
-             <Link to={'/adminpanel'}>{checkAdminAccess && <button className='bg-blue-600 text-white rounded p-1 mr-3'>Admin Panel</button>} </Link>
+             {hasPermission('create_blog')&&(<Link to={'/create'}><button className='bg-green-600 text-white rounded p-1 mr-3'>Add Blog</button> </Link>)}
+             {hasPermission('view_my_blogs')&&(<Link to={'/myblogs'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>My Blogs</button> </Link>)}
+             {hasPermission('admin_panel')&&(<Link to={'/adminpanel'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>Admin Panel</button> </Link>)}
              <Link><button onClick={handleLogout} className='bg-red-600 text-white rounded p-1 mr-3 '>Logout</button></Link>
              <Link to={'/profile'}><img src="/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile" className='w-[35px]'/></Link>
           </div>}

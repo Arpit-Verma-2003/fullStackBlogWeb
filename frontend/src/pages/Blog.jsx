@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { deleteComment, getBlogById, getCommentsByBlogId, getUserId, handleCommentSubmit } from '../../Api/Api';
+import { checkLogin, deleteComment, getBlogById, getCommentsByBlogId, getUserId, handleCommentSubmit } from '../../Api/Api';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import dateFormat from "dateformat";
@@ -9,10 +9,22 @@ const Blog = () => {
   const [comments,setComments] = useState([]);
   const [newComment,setNewComment] = useState("");
   const [userId,setUserId] = useState(null);
+  const [permissions,setPermissions] = useState([]);
+  const [checkLoginAccess,setCheckLoginAccess] = useState(false);
   const apiUrl = "http://localhost:3000/";
   useEffect(()=>{
     window.scrollTo(0, 0);
     async function fetchData() {
+      const checkLogined = await checkLogin();
+      if(!checkLogined.valid){
+        console.log("You are not logined");
+        navigate('/login');
+      }
+      else{
+        setCheckLoginAccess(true);
+        setPermissions(checkLogined.permissions);
+        console.log("You are logined",checkLogined.permissions);
+      } 
       const allBlogs = await getBlogById(id);
       setBlog(allBlogs.data[0]);
       const commentsData = await getCommentsByBlogId(id);
@@ -47,7 +59,7 @@ const Blog = () => {
       }
     }else return;
   };
-
+  const hasPermission = (permissionName) => permissions.includes(permissionName);
   return (
     <div className='flex justify-center items-center'>
         {blog && <div className='flex flex-col w-[70%] overflow-hidden'>
@@ -63,13 +75,13 @@ const Blog = () => {
             </div>
             <div className='comments-section mt-10 p-5 border-t-2 border-gray-300 bg-gray-100 rounded-lg shadow-lg'>
               <h2 className='text-2xl font-bold mb-4 text-gray-700'>Comments - </h2>
-              <textarea
+              {hasPermission('add_comment')&&(<textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
                 className='w-full p-3 mb-3 border border-gray-300 rounded-lg shadow-md'
-              />
-              <button onClick={handleCommentSubmitFunction} className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 mb-3'>Add Comment</button>
+              />)}
+              {hasPermission('add_comment')&&(<button onClick={handleCommentSubmitFunction} className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 mb-3'>Add Comment</button>)}
               {comments.length > 0 ? (
               <ul className='space-y-4'>
                 {comments.map((comment, i) => (
@@ -78,7 +90,7 @@ const Blog = () => {
                       <strong className='text-gray-800'>{comment.username}</strong>: {comment.content}
                     </p>
                     <p className='text-xs text-gray-500 mt-2'>{new Date(comment.created_at).toLocaleString()}</p>
-                    {userId == comment.user_id && (
+                    {(userId == comment.user_id || hasPermission('delete_any_comment')) && (
                       <button
                         onClick={() => handleCommentDelete(comment.id)}
                         className='mt-2 text-red-500 hover:text-red-700'
@@ -90,7 +102,7 @@ const Blog = () => {
                 ))}
               </ul>
             ) : (
-              <p className='text-gray-600'>No comments yet. Be the first to comment!</p>
+              <p className='text-gray-600'>No comments yet. </p>
             )}
             </div>
         </div>}

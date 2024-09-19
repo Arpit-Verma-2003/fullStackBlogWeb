@@ -12,6 +12,7 @@ const getPermissions = 'SELECT * FROM permissions';
 const addRole = 'INSERT INTO roles(role_name) VALUES($1) RETURNING id';
 const addRoleWPermissions = 'INSERT INTO roles_permissions(role_id,permission_id) VALUES($1,$2)';
 const getRoles = 'SELECT role_name FROM roles';
+const getRolePermissions = 'SELECT p.permission_name as permission_name FROM permissions p INNER JOIN roles_permissions rp ON p.id = rp.permission_id WHERE rp.role_id = $1'
 module.exports = {
     getBlogs,
     addBlogs,
@@ -26,5 +27,6 @@ module.exports = {
     getPermissions,
     addRole,
     addRoleWPermissions,
-    getRoles
+    getRoles,
+    getRolePermissions
 }

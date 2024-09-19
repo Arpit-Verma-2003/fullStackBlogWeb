@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import Editblog from './pages/Editblog';
 import Adminpanel from './pages/Adminpanel';
 import Createrole from './pages/Createrole';
+import Updaterole from './pages/Updaterole';
 function App() {
 
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path='/editblog' element={<Editblog/>}></Route>
             <Route path='/adminpanel' element={<Adminpanel/>}></Route>
             <Route path='/createrole' element={<Createrole/>}></Route>
+            <Route path='/updaterole' element={<Updaterole/>}></Route>
             <Route path='*' element={<Nopage/>}></Route>
           </Route>
         </Routes>

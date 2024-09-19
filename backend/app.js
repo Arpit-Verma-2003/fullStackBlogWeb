@@ -45,8 +45,18 @@ app.get('/', (req, res) => {
 })
 
 app.get('/checkLogin',async (req,res)=>{
-      if(req.session.user)  return res.json({"valid":true,"role":req.session.user.role,"username":req.session.user.username});
-      else return res.json({"valid":false,});
+      if(req.session.user){ 
+        try {
+          const roleId = req.session.user.role;
+          const result = await client.query(queries.getRolePermissions,[roleId]);
+          const permissions = result.rows.map(row=>row.permission_name);
+          return res.json({"valid":true,"role":req.session.user.role,"username":req.session.user.username,"permissions":permissions});
+        } catch (error) {
+          console.log(error);
+          return res.status(500).json({ message: 'Error fetching role permissions' });
+        }
+      }
+      else return res.json({"valid":false});
 })
 
 app.get('/userId',(req,res) => {
@@ -122,20 +132,28 @@ app.post('/comments',async(req,res)=>{
 app.delete('/comments/:commentId', async (req, res) => {
   const userId = req.body.user_id;
   const commentId = req.body.comment_id;
-
-  try {
-    const result = await client.query('SELECT * FROM comments WHERE id = $1', [commentId]);
-    const comment = result.rows[0];
-
-    if (comment.user_id !== userId) {
-      return res.status(403).json({ message: 'You can only delete your own comments.' });
+  if(req.session.user){
+    const roleId = req.session.user.role;
+    try {
+      const result1 = await client.query(queries.getRolePermissions,[roleId]);
+      const userPermissions = result1.rows.map(row => row.permission_name);
+      if(userPermissions.includes('delete_any_comment')){
+        await client.query('DELETE FROM comments WHERE id = $1', [commentId]);
+        return res.status(200).json({ message: 'Comment deleted successfully.' });
+      }
+      const result = await client.query('SELECT * FROM comments WHERE id = $1', [commentId]);
+      const comment = result.rows[0];
+  
+      if (comment.user_id !== userId) {
+        return res.status(403).json({ message: 'You can only delete your own comments.' });
+      }
+  
+      await client.query('DELETE FROM comments WHERE id = $1', [commentId]);
+      res.status(200).json({ message: 'Comment deleted successfully.' });
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      res.status(500).json({ message: 'Error deleting comment.' });
     }
-
-    await client.query('DELETE FROM comments WHERE id = $1', [commentId]);
-    res.status(200).json({ message: 'Comment deleted successfully.' });
-  } catch (error) {
-    console.error('Error deleting comment:', error);
-    res.status(500).json({ message: 'Error deleting comment.' });
   }
 });
 
