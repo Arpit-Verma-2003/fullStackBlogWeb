@@ -4,9 +4,7 @@ import Footer from '../components/Footer'
 import { checkLogin } from '../../Api/Api'
 import axios from 'axios'
 const Layout = () => {
-  const [checkButtonAccess, setCheckButtonAccess] = useState(false);
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
-  const [checkAdminAccess, setCheckAdminAccess] = useState(false);
   const [permissions,setPermissions] = useState([]);
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
@@ -15,7 +13,6 @@ const Layout = () => {
       const checkLogined = await checkLogin();
       if(!checkLogined.valid){
         console.log("You are not logined");
-        navigate('/login');
       }
       else{
         setCheckLoginAccess(true);
@@ -33,10 +30,9 @@ const Layout = () => {
         if (response.status === 200) {
           alert("Logout Successful");
           console.log("Logout successful");
-          setCheckButtonAccess(false);
           setCheckLoginAccess(false);
-          setCheckAdminAccess(false);
-          navigate('/login'); // Redirect user to login page after logout
+          setPermissions([]);
+          navigate('/login');
         }
       } catch (error) {
         console.error("Logout failed", error);
@@ -56,7 +52,7 @@ const Layout = () => {
        <div className="border-b p-5">
         <div className="container flex pb-5 justify-between">
          <Link to='/'><span className='font-extrabold text-2xl'>BlogPost</span></Link>
-          {checkLoginAccess && <div className="flex">
+           <div className="flex">
             <ul className="flex">
               {
                 menu.map((x,i)=>{
@@ -67,9 +63,10 @@ const Layout = () => {
              {hasPermission('create_blog')&&(<Link to={'/create'}><button className='bg-green-600 text-white rounded p-1 mr-3'>Add Blog</button> </Link>)}
              {hasPermission('view_my_blogs')&&(<Link to={'/myblogs'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>My Blogs</button> </Link>)}
              {hasPermission('admin_panel')&&(<Link to={'/adminpanel'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>Admin Panel</button> </Link>)}
-             <Link><button onClick={handleLogout} className='bg-red-600 text-white rounded p-1 mr-3 '>Logout</button></Link>
-             <Link to={'/profile'}><img src="/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile" className='w-[35px]'/></Link>
-          </div>}
+             {checkLoginAccess && (<Link><button onClick={handleLogout} className='bg-red-600 text-white rounded p-1 mr-3 '>Logout</button></Link>)}
+             {!checkLoginAccess && (<Link to={'/login'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>Login</button></Link>)}
+             {checkLoginAccess && (<Link to={'/profile'}><img src="/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile" className='w-[35px]'/></Link>)}
+          </div>
         </div>
       </div>
       {/* body */}

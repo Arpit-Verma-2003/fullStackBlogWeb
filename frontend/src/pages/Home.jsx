@@ -13,13 +13,9 @@ const Home = () => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
       const response = await getBlogs(category, 1);
-      if (!response.valid) {
-        navigate('/login');
-      } else {
         setBlogs(response.data);
         setPage(1);
         setHasMore(response.data.length === 9);
-      }
     };
 
     fetchData();
@@ -29,12 +25,9 @@ const Home = () => {
     const fetchData = async () => {
       const response = await getBlogs(category, page);
 
-      if (!response.valid) {
-        navigate('/login');
-      } else {
         setBlogs(prevBlogs => [...prevBlogs, ...response.data]);
         setHasMore(response.data.length === 9);
-      }
+
     };
 
     if (page > 1) {

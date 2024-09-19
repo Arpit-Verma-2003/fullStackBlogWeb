@@ -4,7 +4,6 @@ const cors = require('cors');
 const flash = require("express-flash");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-// const pgSession = require('connect-pg-simple')(session);
 const bcrypt = require("bcrypt");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -103,6 +102,31 @@ app.get('/permissions',async(req,res)=>{
     res.status(500).json({message:"unable to fetch the permissions"});
   }
 })
+
+app.get('/users', async (req, res) => {
+  try {
+    const result = await client.query(queries.fetchUsers);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Error fetching users.' });
+  }
+});
+
+app.put('/users/:userId/role', async (req, res) => {
+  const { userId } = req.params;
+  const { newRoleId:roleName } = req.body; 
+  console.log(userId,roleName);
+  try {
+    const roleResult = await client.query('SELECT id FROM roles WHERE role_name = $1', [roleName]);
+    const roleId = roleResult.rows[0].id;
+    await client.query('UPDATE users SET role_id = $1 WHERE id = $2', [roleId, userId]);
+    res.status(200).json({ message: 'User role updated successfully.' });
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    res.status(500).json({ message: 'Error updating user role.' });
+  }
+});
 
 app.post('/roles',async(req,res)=>{
   const {roleName,permissionIds} = req.body;

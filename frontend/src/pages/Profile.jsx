@@ -9,7 +9,9 @@ const Profile = () => {
         const fetchData = async () => {
           const response = await checkLogin();
           if (!response.valid) {
-            navigate('/login');
+            setName("Guest");
+            setUserRole("Viewer");
+            setContent("Hence, You can only View blogs and don't have other permissions");
           } else {
             setName(response.username);
             if(response.role==1){

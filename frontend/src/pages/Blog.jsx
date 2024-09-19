@@ -10,7 +10,6 @@ const Blog = () => {
   const [newComment,setNewComment] = useState("");
   const [userId,setUserId] = useState(null);
   const [permissions,setPermissions] = useState([]);
-  const [checkLoginAccess,setCheckLoginAccess] = useState(false);
   const apiUrl = "http://localhost:3000/";
   useEffect(()=>{
     window.scrollTo(0, 0);
@@ -18,10 +17,8 @@ const Blog = () => {
       const checkLogined = await checkLogin();
       if(!checkLogined.valid){
         console.log("You are not logined");
-        navigate('/login');
       }
       else{
-        setCheckLoginAccess(true);
         setPermissions(checkLogined.permissions);
         console.log("You are logined",checkLogined.permissions);
       } 

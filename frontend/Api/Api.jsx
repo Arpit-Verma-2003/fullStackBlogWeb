@@ -18,6 +18,22 @@ export const checkLogin = () => {
     });
 };
 
+export const getUsers = async () => {
+  const response = await axios.get(apiUrl+'/users');
+  return response.data;
+};
+
+export const getRoles = async () => {
+  const response = await axios.get(apiUrl+'/roles');
+  return response.data;
+};
+
+
+export const updateUserRole = async (userId, newRoleId) => {
+  await axios.put(`${apiUrl}/users/${userId}/role`, { newRoleId });
+};
+
+
 export const createRole = async (newRole) => {
   try {
     const response = await axios.post(apiUrl+ '/roles', newRole);
