@@ -7,20 +7,30 @@ const Blogcard = ({blogData,handleDelete, showDelete}) => {
   }
   return (
     <div className='bg-white'>
-      <Link to={`/blog/${blogData.id}`}>
-        <div className='flex w-full flex-col shadow-md overflow-hidden rounded-md'>
-            <img src={apiUrl+blogData.image} className='object-fill h-300' alt="" />
-            <div className='p-2'>
+      <div className='flex w-full flex-col shadow-md overflow-hidden rounded-md'>
+        <Link to={`/blog/${blogData.id}`}>
+            <img src={apiUrl+blogData.image} className='w-full object-fill h-300' alt="" />
+            </Link>
+          </div>
+            <div className='p-2 flex justify-between items-center'>
+              <div>
                 <h2 className='text-xl text-left mt-1'>{truncateTitle(blogData.title)}</h2>
                 <p className='text-sm text-left opacity-75'>{blogData.category}</p>
+              </div>
+              {showDelete && (
+          <button 
+            onClick={() => handleDelete(blogData.id)} 
+            className='bg-red-600 text-white rounded p-1 ml-4'
+          >
+            Delete
+          </button>
+        )}
             </div>
-        </div>
-      </Link>
-      {showDelete && (
+      {/* {showDelete && (
         <button onClick={() => handleDelete(blogData.id)} className='bg-red-600 text-white rounded p-1 mt-2'>
           Delete
         </button>
-      )}
+      )} */}
     </div>
   )
 }

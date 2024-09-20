@@ -60,12 +60,9 @@ const Layout = () => {
                 })
               }
             </ul>
-             {hasPermission('create_blog')&&(<Link to={'/create'}><button className='bg-green-600 text-white rounded p-1 mr-3'>Add Blog</button> </Link>)}
-             {hasPermission('view_my_blogs')&&(<Link to={'/myblogs'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>My Blogs</button> </Link>)}
-             {hasPermission('admin_panel')&&(<Link to={'/adminpanel'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>Admin Panel</button> </Link>)}
-             {checkLoginAccess && (<Link><button onClick={handleLogout} className='bg-red-600 text-white rounded p-1 mr-3 '>Logout</button></Link>)}
              {!checkLoginAccess && (<Link to={'/login'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>Login</button></Link>)}
-             {checkLoginAccess && (<Link to={'/profile'}><img src="/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile" className='w-[35px]'/></Link>)}
+             {checkLoginAccess && (<Link to={'/profile'}><img src="/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile" className='w-[35px] p-1 mr-3'/></Link>)}
+             {checkLoginAccess && (<Link><button onClick={handleLogout} className='bg-red-600 text-white rounded p-1'>Logout</button></Link>)}
           </div>
         </div>
       </div>
