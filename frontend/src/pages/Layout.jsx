@@ -1,11 +1,12 @@
 import React, { useEffect ,useState } from 'react'
 import { Link, Outlet,useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
-import { checkLogin } from '../../Api/Api'
+import { checkLogin, fetchCategories } from '../../Api/Api'
 import axios from 'axios'
 const Layout = () => {
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
   const [permissions,setPermissions] = useState([]);
+  const [categories,setCategories] = useState([]);
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
   useEffect(()=>{
@@ -17,8 +18,11 @@ const Layout = () => {
       else{
         setCheckLoginAccess(true);
         setPermissions(checkLogined.permissions);
-        console.log("You are logined",checkLogined.permissions);
       } 
+      const fetchedCategories = await fetchCategories();
+      if(fetchedCategories){
+        setCategories(fetchedCategories.data);
+      }
     }
     fetchData();
   },[navigate]);
@@ -39,12 +43,6 @@ const Layout = () => {
       }
     }
   };
-  const menu = [
-    {text:'Trending',path:'/'},
-    {text:'National',path:'/'},
-    {text:'Sports',path:'/'},
-    {text:'Politics',path:'/'}
-  ]
   const hasPermission = (permissionName) => permissions.includes(permissionName);
   return (
     <>
@@ -55,8 +53,8 @@ const Layout = () => {
            <div className="flex">
             <ul className="flex">
               {
-                menu.map((x,i)=>{
-                  return <li key={i} className='p-2'><Link to={`/?category=${x.text}`}>{x.text}</Link></li>
+                categories.map((x,i)=>{
+                  return <li key={i} className='p-2'><Link to={`/?category=${x.name}`}>{x.name}</Link></li>
                 })
               }
             </ul>

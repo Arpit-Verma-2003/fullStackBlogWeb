@@ -207,6 +207,27 @@ app.get('/blogs/:cat',async (req,res)=>{
   }
 })
 
+app.get('/categories',async(req,res)=>{
+  try {
+    const result = await client.query(queries.getCategories);
+    return res.json({data:result.rows});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Error in getting the Categories"});
+  }
+})
+
+app.post('/categories',async(req,res)=>{
+  const {name} = req.body;
+  try {
+    const result = await client.query(queries.addCategories,[name]);
+    return res.json({ success: true, data: result.rows[0] });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Error in adding the category"});
+  }
+})
+
 app.get('/blogsbyid/:id',async (req,res)=>{
   const id = req.params.id;
   const result = await client.query(queries.getBlogsById,[id]);

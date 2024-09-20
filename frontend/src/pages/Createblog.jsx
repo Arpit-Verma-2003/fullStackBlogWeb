@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { checkLogin, postBlogs, uploadImage } from '../../Api/Api';
+import { checkLogin, fetchCategories, postBlogs, uploadImage } from '../../Api/Api';
 const Createblog = () => {
-
+    
     const blankBlog = {
         "author" : "",
         "title" : "",
@@ -13,12 +13,16 @@ const Createblog = () => {
     }
     const [newblog,setNewblog] = useState(blankBlog);
     const [image,setImage] = useState(null);
-    const menu = [
-        {text:'Trending',path:'/'},
-        {text:'National',path:'/'},
-        {text:'Sports',path:'/'},
-        {text:'Politics',path:'/'}
-      ]
+    const [categories,setCategories] = useState([]);
+    useEffect(() => {
+        async function fetchData(){
+          const fetchedCategories = await fetchCategories();
+          if(fetchedCategories){
+          setCategories(fetchedCategories.data);
+        }
+        }
+        fetchData();
+    }, [])
     const handleImage = async(event)=>{
         setImage(event.target.files[0]);
     }
@@ -68,8 +72,8 @@ const Createblog = () => {
                 <label htmlFor="" className='ml-1 text-gray-500'>Category</label>
                 <select name="" value={newblog.category} onChange={(e)=>setNewblog({...newblog,category:e.target.value})} id="" className='h-10 border border-gray-300 rounded my-2 p-2'>
                     <option value="" default disabled>Select Category</option>
-                    {menu.map(x=>{
-                        return <option value={x.text}>{x.text}</option>
+                    {categories.map(x=>{
+                        return <option key={x.id} value={x.name}>{x.name}</option>
                     })}
                 </select>
                 <label htmlFor="" className='ml-1 text-gray-500'>Image</label>

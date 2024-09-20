@@ -15,6 +15,7 @@ import Editblog from './pages/Editblog';
 import Adminpanel from './pages/Adminpanel';
 import Createrole from './pages/Createrole';
 import Allusers from './pages/Allusers';
+import Addcategory from './pages/Addcategory';
 function App() {
 
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path='/adminpanel' element={<Adminpanel/>}></Route>
             <Route path='/createrole' element={<Createrole/>}></Route>
             <Route path='/allusers' element={<Allusers/>}></Route>
+            <Route path='/addcategory' element={<Addcategory/>}></Route>
             <Route path='*' element={<Nopage/>}></Route>
           </Route>
         </Routes>

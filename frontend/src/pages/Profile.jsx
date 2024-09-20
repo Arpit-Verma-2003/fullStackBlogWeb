@@ -41,9 +41,9 @@ const Profile = () => {
             <h3 className='text-lg text-gray-600 mb-2'>Your current role is: <span className="font-bold text-indigo-500">{userRole}</span></h3>
             <h4 className='text-md text-gray-500 mb-2'>{content}</h4>
             <h3 className='text-lg text-gray-700 mb-2'>You have the following options : </h3>
-            {hasPermission('create_blog')&&(<Link to={'/create'}><button className='bg-green-600 text-white rounded p-1 mr-3'>Add Blog</button> </Link>)}
-             {hasPermission('view_my_blogs')&&(<Link to={'/myblogs'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>My Blogs</button> </Link>)}
-             {hasPermission('admin_panel')&&(<Link to={'/adminpanel'}><button className='bg-blue-600 text-white rounded p-1 mr-3'>Admin Panel</button> </Link>)}
+            {hasPermission('create_blog')&&(<Link to={'/create'}><button className='bg-green-600 text-white text-lg px-6 py-2 rounded mr-3 my-2'>Add Blog</button> </Link>)}
+             {hasPermission('view_my_blogs')&&(<Link to={'/myblogs'}><button className='bg-blue-600 text-white text-lg px-6 py-2 rounded p-1 mr-3 my-2'>My Blogs</button> </Link>)}
+             {hasPermission('admin_panel')&&(<Link to={'/adminpanel'}><button className='bg-blue-600 text-white rounded px-6 py-2 mr-3 my-2'>Admin Panel</button> </Link>)}
         </div>
     </div>
   )

@@ -28,11 +28,29 @@ export const getRoles = async () => {
   return response.data;
 };
 
+export const addCategory = async (categoryName) => {
+  try {
+    const response = await axios.post(apiUrl + '/categories', { name: categoryName });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding category', error);
+    return { success: false };
+  }
+};
 
 export const updateUserRole = async (userId, newRoleId) => {
   await axios.put(`${apiUrl}/users/${userId}/role`, { newRoleId });
 };
 
+export const fetchCategories = async()=>{
+  try {
+    const response = await axios.get(apiUrl+'/categories');
+  return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
 
 export const createRole = async (newRole) => {
   try {

@@ -20,17 +20,12 @@ const Blogcard = ({blogData,handleDelete, showDelete}) => {
               {showDelete && (
           <button 
             onClick={() => handleDelete(blogData.id)} 
-            className='bg-red-600 text-white rounded p-1 ml-4'
+            className='bg-red-600 text-white rounded p-1 ml-4 text-xs'
           >
             Delete
           </button>
         )}
             </div>
-      {/* {showDelete && (
-        <button onClick={() => handleDelete(blogData.id)} className='bg-red-600 text-white rounded p-1 mt-2'>
-          Delete
-        </button>
-      )} */}
     </div>
   )
 }
