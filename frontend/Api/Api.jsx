@@ -1,8 +1,8 @@
 import axios from "axios";
 const apiUrl = "http://localhost:3000";
-export const getBlogs = (cat = 'all', page = 1, limit = 9) => {
+export const getBlogs = (cat = 'all', page = 1, limit = 9,searchQuery = '') => {
   return axios
-    .get(apiUrl + `/blogs/${cat}?page=${page}&limit=${limit}`)
+    .get(apiUrl + `/blogs/${cat}?page=${page}&limit=${limit}&search=${searchQuery}`)
     .then(result => result.data)
     .catch(err => err);
 };
@@ -141,9 +141,9 @@ export const deleteBlog = async (blogId) => {
   }
 };
 
-export const getBlogsByAuthor = () => {
+export const getBlogsByAuthor = (search = '') => {
   return axios
-    .get(apiUrl + "/author/blogs")
+    .get(apiUrl + `/author/blogs?search=${search}`)
     .then(result => {
       return result.data;
     })

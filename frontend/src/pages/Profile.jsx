@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { checkLogin } from '../../Api/Api';
 import { Link } from 'react-router-dom';
+import { LoginContext } from '../context/LoginC';
 const Profile = () => {
+    const loginVar = useContext(LoginContext);
     const [name,setName] = useState("");
     const [userRole,setUserRole] = useState("");
     const [content,setContent] = useState("");
     const [permissions,setPermissions] = useState([]);
     useEffect(() => {
         window.scrollTo(0, 0);
+        console.log(loginVar.login,"hehe");
         const fetchData = async () => {
           const response = await checkLogin();
           if (!response.valid) {
@@ -31,8 +34,14 @@ const Profile = () => {
         };
     
         fetchData();
-      }, []);
+      }, [loginVar]);
       const hasPermission = (permissionName) => permissions.includes(permissionName);
+  if(loginVar === null){
+    return <div>Loading...</div>
+  }
+  if(loginVar.login === false){
+    return <div>Not Logined</div>
+  }
   return (
     <div className="flex items-center justify-center min-h-[500px] bg-gradient-to-b from-gray-100 to-red-100">
         <div className='bg-white shadow-lg rounded-lg p-8 max-w-lg w-full border border-gray-200'>

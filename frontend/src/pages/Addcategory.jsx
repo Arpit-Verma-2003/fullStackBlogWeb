@@ -1,8 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { addCategory, fetchCategories } from '../../Api/Api';
+import {useNavigate } from 'react-router-dom'
+import { LoginContext } from '../context/LoginC';
 const Addcategory = () => {
+    const navigate = useNavigate();
     const [categories,setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState("");
+    const details = useContext(LoginContext);
+    const [permissions,setPermissions] = useState([]);
+    useEffect(()=>{
+      async function fetch() {
+        console.log(details.login);
+        if(details.login === false){
+          navigate('/login');
+        }
+        setPermissions(details.cpermissions);
+      }
+      fetch();
+    },[details])
     useEffect(() => {
         async function fetchData(){
           const fetchedCategories = await fetchCategories();
@@ -24,13 +39,20 @@ const Addcategory = () => {
           alert("Category Added Successfully");
         }
       };
-    
+  const hasPermission = (permissionName) => permissions.includes(permissionName);
+  if(details === null){
+    return <div>Loading...</div>
+  }
+
+  if (!hasPermission('add_category')) {
+    return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
+  }
   return (
     <div>
         <h2 className='text-xl font-semibold mb-4'>Currently Added Categories : </h2>
         <ul className='flex flex-wrap gap-3'>
             {categories.map((x,i)=>{
-                return <li className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition-colors">{x.name}</li>
+                return <li key={i} className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition-colors">{x.name}</li>
             })}
         </ul>
         <div className='mt-5'>

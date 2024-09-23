@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getUsers, updateUserRole, getRoles } from '../../Api/Api';
+import { LoginContext } from '../context/LoginC';
+import { useNavigate } from 'react-router-dom';
 const Allusers = () => {
         const [users, setUsers] = useState([]);
         const [roles, setRoles] = useState([]);
         const [selectedRoles, setSelectedRoles] = useState({});
-      
+        const details = useContext(LoginContext);
+        const [permissions,setPermissions] = useState([]);
+        const navigate = useNavigate();
         useEffect(() => {
           const fetchData = async () => {
             const usersData = await getUsers();
@@ -15,6 +19,15 @@ const Allusers = () => {
       
           fetchData();
         }, []);
+        useEffect(()=>{
+          async function fetch() {
+            if(details.login === false){
+              navigate('/login');
+            }
+            setPermissions(details.cpermissions);
+          }
+          fetch();
+        },[details,navigate])
       
         const handleRoleChange = (userId, newRoleId) => {
           setSelectedRoles({ ...selectedRoles, [userId]: newRoleId });
@@ -32,6 +45,10 @@ const Allusers = () => {
             alert('Failed to update role');
           }
         };
+        const hasPermission = (permissionName) => permissions.includes(permissionName);
+    if (!hasPermission('all_users')) {
+      return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
+    }
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Manage Users</h2>

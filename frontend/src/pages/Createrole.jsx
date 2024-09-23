@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { createRole, getPermissions } from '../../Api/Api'
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../context/LoginC';
 const Createrole = () => {
     const [permissions, setPermissions] = useState([]);
     const [roleName, setRoleName] = useState('');
     const [selectedPermissions, setSelectedPermissions] = useState([]);
+    const details = useContext(LoginContext);
+    const [userpermissions,setUserPermissions] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchPermissions = async ()=>{
             const permissions_data = await getPermissions();
@@ -11,6 +16,15 @@ const Createrole = () => {
         }
         fetchPermissions();
       }, [])
+      useEffect(()=>{
+        async function fetch() {
+          if(details.login === false){
+            navigate('/login');
+          }
+          setUserPermissions(details.cpermissions);
+        }
+        fetch();
+      },[details,navigate])
 
       const handlePermissionChange = (permissionId) => {
         if (selectedPermissions.includes(permissionId)) {
@@ -34,6 +48,10 @@ const Createrole = () => {
             console.error('Error creating role:', err);
             alert('Failed to create role');
           }
+    }
+    const hasPermission = (permissionName) => userpermissions.includes(permissionName);
+    if (!hasPermission('add_role')) {
+        return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
     }
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">

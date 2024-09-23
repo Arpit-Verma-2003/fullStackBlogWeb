@@ -1,9 +1,11 @@
-import React, { useEffect ,useState } from 'react'
+import React, { useContext, useEffect ,useState } from 'react'
 import { Link, Outlet,useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import { checkLogin, fetchCategories } from '../../Api/Api'
 import axios from 'axios'
+import { LoginContext } from '../context/LoginC';
 const Layout = () => {
+  const loginVar = useContext(LoginContext);
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
   const [permissions,setPermissions] = useState([]);
   const [categories,setCategories] = useState([]);
@@ -34,6 +36,8 @@ const Layout = () => {
         if (response.status === 200) {
           alert("Logout Successful");
           console.log("Logout successful");
+          loginVar.setLogin(false);
+          loginVar.setCPermissions([]);
           setCheckLoginAccess(false);
           setPermissions([]);
           navigate('/login');

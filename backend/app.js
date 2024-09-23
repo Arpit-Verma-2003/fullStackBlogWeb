@@ -193,11 +193,16 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/blogs/:cat',async (req,res)=>{
   const { cat } = req.params;
-  const { page = 1, limit = 9 } = req.query;
+  const { page = 1, limit = 9,search ='' } = req.query;
   const offset = (page - 1) * limit;
-  const query = cat !== 'all' 
-  ? `SELECT * FROM blogs WHERE category = '${cat}' LIMIT ${limit} OFFSET ${offset}`
-  : `SELECT * FROM blogs LIMIT ${limit} OFFSET ${offset}`;
+  let query = cat !== 'all' 
+  ? `SELECT * FROM blogs WHERE category = '${cat}'`
+  : `SELECT * FROM blogs `;
+  if (search) {
+    if(cat!=='all') query += ` AND title ILIKE '%${search}%'`;
+    else query += `WHERE title ILIKE '%${search}%'`
+  }
+  query+= `LIMIT ${limit} OFFSET ${offset}`;
   try {
     const result = await client.query(query);
     const valid = !!req.session.user;
@@ -235,9 +240,10 @@ app.get('/blogsbyid/:id',async (req,res)=>{
 })
 
 app.get('/author/blogs', async (req, res) => {
+  const search = req.query.search || '';
   if(req.session.user){
     const userId = req.session.user.id;
-    const result = await client.query(queries.getBlogsByAuthorId, [userId]);
+    const result = await client.query(queries.getBlogsByAuthorId, [userId,`%${search}%`]);
     return res.json({ valid: true, data: result.rows });
   }
 });

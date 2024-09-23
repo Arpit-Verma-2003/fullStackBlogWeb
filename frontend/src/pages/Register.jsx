@@ -1,7 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { checkAdmin } from '../../Api/Api';
+import { LoginContext } from '../context/LoginC';
 const Register = () => {
     const [formData, setFormData] = useState({
         username: "",
@@ -13,6 +13,8 @@ const Register = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [roles,setRoles] = useState([]);
+    const details = useContext(LoginContext);
+    const [permissions,setPermissions] = useState([]);
     const navigate = useNavigate();
 
 
@@ -26,16 +28,16 @@ const Register = () => {
         }
     };
 
-    useEffect(() => {
-        async function checkAdminFunction() {
-            const res = await checkAdmin();
-            if(!res.valid) navigate('/');
-            if(!res.login) navigate('/login')
+    useEffect(()=>{
+        async function fetch() {
+          if(details.login === false){
+            navigate('/login');
+          }
+          setPermissions(details.cpermissions);
         }
-        checkAdminFunction();
+        fetch();
         fetchRoles();
-    }, [])
-    
+      },[details,navigate])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -66,6 +68,10 @@ const Register = () => {
             }
             setSuccess(null);
         }
+    }
+    const hasPermission = (permissionName) => permissions.includes(permissionName);
+    if (!hasPermission('add_user')) {
+        return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
     }
     return (
         <div className='flex flex-col items-center p-6'>

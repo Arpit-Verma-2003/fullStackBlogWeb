@@ -7,23 +7,24 @@ const Home = () => {
   const [blogs,setBlogs] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const category = searchParams.get('category') || 'all';
   const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
-      const response = await getBlogs(category, 1);
+      const response = await getBlogs(category, 1,9,searchQuery);
         setBlogs(response.data);
         setPage(1);
         setHasMore(response.data.length === 9);
     };
 
     fetchData();
-  }, [category, navigate]);
+  }, [category, navigate,searchQuery]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getBlogs(category, page);
+      const response = await getBlogs(category, page,9,searchQuery);
 
         setBlogs(prevBlogs => [...prevBlogs, ...response.data]);
         setHasMore(response.data.length === 9);
@@ -33,17 +34,26 @@ const Home = () => {
     if (page > 1) {
       fetchData();
     }
-  }, [page,category]);
+  }, [page,category,searchQuery]);
 
   const loadMore = () => {
     setPage(prevPage => prevPage + 1);
   };
   return (
     <>  
+          <div className='mb-4'>
+            <input
+                type='text' placeholder='Search blogs...' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                className='w-full p-2 border border-gray-300 rounded-md'
+            />
+        </div>
         <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
-          {blogs && blogs.map((x,i)=>{
+        {blogs &&  blogs.length > 0 ? ( blogs.map((x,i)=>{
             return <Blogcard key={i} blogData = {x} showDelete={false}/>
-          })}
+          })):(
+            <p>No Blogs Found :(</p>
+          )
+          }
         </div>
         {hasMore && (
         <button onClick={loadMore} className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'>

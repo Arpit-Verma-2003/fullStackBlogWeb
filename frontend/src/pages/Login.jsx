@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { LoginContext } from '../context/LoginC';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+  const loginVar = useContext(LoginContext);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ axios.defaults.withCredentials = true;
     try {
       const res = await axios.post('http://localhost:3000/api/login', formData);
       setSuccess("Login Successful Redirecting To Home Page");
+      loginVar.setLogin(true);
       setTimeout(() => {
         navigate('/');
       }, 2000);
