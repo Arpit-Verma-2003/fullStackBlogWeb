@@ -10,7 +10,6 @@ const Profile = () => {
     const [permissions,setPermissions] = useState([]);
     useEffect(() => {
         window.scrollTo(0, 0);
-        console.log(loginVar.login,"hehe");
         const fetchData = async () => {
           const response = await checkLogin();
           if (!response.valid) {

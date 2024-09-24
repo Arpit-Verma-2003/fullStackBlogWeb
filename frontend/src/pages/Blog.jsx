@@ -30,7 +30,6 @@ const Blog = () => {
       console.log("You are not logined");
     }
     else{
-      console.log(details.cpermissions);
       setPermissions(details.cpermissions);
     } 
   },[details])
