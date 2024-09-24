@@ -20,10 +20,13 @@ const Myblogs = () => {
             alert("Failed to delete blog");
           }
         }
-      };
+    };
+    const handleEdit = async(blogId) =>{
+      const confirmEdit = window.confirm("Are you sure you want to edit this blog?");
+      if(confirmEdit) navigate(`/editblog/${blogId}`);
+    }
     useEffect(()=>{
       async function fetch() {
-        console.log(loginVar.login);
         if(loginVar.login === false){
           navigate('/login');
         }
@@ -58,8 +61,8 @@ const Myblogs = () => {
         </div>
       <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
           {blogs &&  blogs.length > 0 ? ( blogs.map((x,i)=>{
-            return <Blogcard key={i} blogData = {x} handleDelete={handleDelete}
-            showDelete={true}/>
+            return <Blogcard key={i} blogData = {x} handleDelete={handleDelete} handleEdit={handleEdit}
+            showDelete={true} showEdit={true}/>
           })) :(
             <p>No Blogs Found :(</p>
           )}

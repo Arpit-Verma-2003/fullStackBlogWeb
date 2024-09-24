@@ -71,7 +71,9 @@ const Blog = () => {
               <img className='rounded-lg object-scale-down max-w-full max-h-full w-[800px] h-[500px]' src={apiUrl+blog.image} alt="photo_lorem" />
             
             <div className='justify-start mt-5'>
-              {parse(blog.post)}
+              <div className='prose justify-start'>
+                {parse(blog.post)}
+              </div>
             </div>
             <div className='comments-section mt-10 p-5 border-t-2 border-gray-300 bg-gray-100 rounded-lg shadow-lg'>
               <h2 className='text-2xl font-bold mb-4 text-gray-700'>Comments - </h2>

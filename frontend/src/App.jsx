@@ -32,7 +32,7 @@ function App() {
             <Route path='/login' element={<Login/>}></Route>
             <Route path='/myblogs' element={<Myblogs/>}></Route>
             <Route path='/profile' element={<Profile/>}></Route>
-            <Route path='/editblog' element={<Editblog/>}></Route>
+            <Route path='/editblog/:id' element={<Editblog/>}></Route>
             <Route path='/adminpanel' element={<Adminpanel/>}></Route>
             <Route path='/createrole' element={<Createrole/>}></Route>
             <Route path='/allusers' element={<Allusers/>}></Route>

@@ -16,6 +16,7 @@ const getRolePermissions = 'SELECT p.permission_name as permission_name FROM per
 const fetchUsers = 'SELECT u.id, u.username, r.role_name FROM users u INNER JOIN roles r ON u.role_id = r.id'
 const getCategories = 'SELECT * FROM categories'
 const addCategories = 'INSERT INTO categories (name) VALUES ($1) RETURNING *';
+const updateBlog = 'UPDATE blogs SET title = $1, image = $2, post = $3, category = $4 WHERE id = $5'
 module.exports = {
     getBlogs,
     addBlogs,
@@ -34,5 +35,6 @@ module.exports = {
     getRolePermissions,
     fetchUsers,
     getCategories,
-    addCategories
+    addCategories,
+    updateBlog
 }

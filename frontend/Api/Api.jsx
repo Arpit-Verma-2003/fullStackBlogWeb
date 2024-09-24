@@ -163,6 +163,17 @@ export const postBlogs = (data) => {
     });
 };
 
+export const updateBlog = (id,data) =>{
+  return axios
+  .put(`${apiUrl}/blogs/${id}`,data)
+  .then((result)=>{
+    return result.data;
+  })
+  .catch((err)=>{
+    return err;
+  })
+}
+
 export const getBlogById = (id) => {
   return axios
     .get(apiUrl + "/blogsbyid/"+id)

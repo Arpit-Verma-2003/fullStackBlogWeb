@@ -49,7 +49,7 @@ const Home = () => {
         </div>
         <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
         {blogs &&  blogs.length > 0 ? ( blogs.map((x,i)=>{
-            return <Blogcard key={i} blogData = {x} showDelete={false}/>
+            return <Blogcard key={i} blogData = {x} showDelete={false} showEdit={false}/>
           })):(
             <p>No Blogs Found :(</p>
           )

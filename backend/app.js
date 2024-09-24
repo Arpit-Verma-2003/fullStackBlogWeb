@@ -128,6 +128,22 @@ app.put('/users/:userId/role', async (req, res) => {
   }
 });
 
+app.put('/blogs/:id',async(req,res)=>{
+  const {id} = req.params;
+  const { title, image, post, category} = req.body;
+  try {
+    const checkResult = await client.query(queries.getBlogsById,[id]);
+    if(checkResult.rowCount === 0){
+      return res.status(404).json({ message: 'Blog not found.' });
+    }
+    await client.query(queries.updateBlog,[title, image, post, category,id]);
+    res.status(200).json({success: true, message: 'Blog updated successfully.' });
+  } catch (error) {
+    console.error('Error updating blog:', error);
+    res.status(500).json({ message: 'Error updating blog.' });
+  }
+})
+
 app.post('/roles',async(req,res)=>{
   const {roleName,permissionIds} = req.body;
   try {

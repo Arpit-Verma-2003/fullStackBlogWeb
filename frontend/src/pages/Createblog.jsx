@@ -73,6 +73,7 @@ const Createblog = () => {
         if(createdBlog.data == 1){
             setNewblog(blankBlog);
             alert("New Blog Added Sucessfully");
+            navigate('/');
         }
     }
     const hasPermission = (permissionName) => permissions.includes(permissionName);

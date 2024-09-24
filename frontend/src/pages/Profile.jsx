@@ -40,7 +40,7 @@ const Profile = () => {
     return <div>Loading...</div>
   }
   if(loginVar.login === false){
-    return <div>Not Logined</div>
+    return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>You Are Not Logged In</h2>;
   }
   return (
     <div className="flex items-center justify-center min-h-[500px] bg-gradient-to-b from-gray-100 to-red-100">
