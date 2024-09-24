@@ -45,7 +45,7 @@ const Myblogs = () => {
         return <div>Loading...</div>
       }
       const hasPermission = (permissionName) => permissions.includes(permissionName);
-      if (!hasPermission('view_my_blogs')) {
+      if (!hasPermission('View My Blogs')) {
           return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
       }
   return (

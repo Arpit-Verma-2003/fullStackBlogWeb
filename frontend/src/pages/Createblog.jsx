@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { checkLogin, fetchCategories, postBlogs, uploadImage } from '../../Api/Api';
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../context/LoginC';
 const Createblog = () => {
     
     const blankBlog = {
@@ -11,6 +13,9 @@ const Createblog = () => {
         "post" : "<p><br></p>",
         "category" : ""
     }
+    const details = useContext(LoginContext);
+    const [permissions,setPermissions] = useState([]);
+    const navigate = useNavigate();
     const [newblog,setNewblog] = useState(blankBlog);
     const [image,setImage] = useState(null);
     const [categories,setCategories] = useState([]);
@@ -23,6 +28,15 @@ const Createblog = () => {
         }
         fetchData();
     }, [])
+    useEffect(()=>{
+        async function fetch() {
+          if(details.login === false){
+            navigate('/login');
+          }
+          setPermissions(details.cpermissions);
+        }
+        fetch();
+      },[details,navigate])
     const handleImage = async(event)=>{
         setImage(event.target.files[0]);
     }
@@ -61,7 +75,10 @@ const Createblog = () => {
             alert("New Blog Added Sucessfully");
         }
     }
-
+    const hasPermission = (permissionName) => permissions.includes(permissionName);
+    if (!hasPermission('Create Blog')) {
+        return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
+    }
       return (
     <div className='flex w-full items-center justify-center'>
         <div className='bg-slate-200 w-[60%] rounded p-5'>

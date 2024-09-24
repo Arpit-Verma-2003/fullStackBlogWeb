@@ -1,27 +1,21 @@
-import React,{useEffect,useState} from 'react'
+import React,{useContext, useEffect,useState} from 'react'
 import { checkLogin, deleteComment, getBlogById, getCommentsByBlogId, getUserId, handleCommentSubmit } from '../../Api/Api';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import dateFormat from "dateformat";
+import { LoginContext } from '../context/LoginC';
 const Blog = () => {
   const {id} = useParams();
   const [blog,setBlog] = useState(null);
   const [comments,setComments] = useState([]);
   const [newComment,setNewComment] = useState("");
   const [userId,setUserId] = useState(null);
+  const details = useContext(LoginContext);
   const [permissions,setPermissions] = useState([]);
   const apiUrl = "http://localhost:3000/";
   useEffect(()=>{
     window.scrollTo(0, 0);
     async function fetchData() {
-      const checkLogined = await checkLogin();
-      if(!checkLogined.valid){
-        console.log("You are not logined");
-      }
-      else{
-        setPermissions(checkLogined.permissions);
-        console.log("You are logined",checkLogined.permissions);
-      } 
       const allBlogs = await getBlogById(id);
       setBlog(allBlogs.data[0]);
       const commentsData = await getCommentsByBlogId(id);
@@ -31,6 +25,15 @@ const Blog = () => {
     }
     fetchData();
   },[]);
+  useEffect(()=>{
+    if(!details.login){
+      console.log("You are not logined");
+    }
+    else{
+      console.log(details.cpermissions);
+      setPermissions(details.cpermissions);
+    } 
+  },[details])
 
   const handleCommentSubmitFunction = async ()=>{
     if(newComment.trim()===""){
@@ -72,13 +75,13 @@ const Blog = () => {
             </div>
             <div className='comments-section mt-10 p-5 border-t-2 border-gray-300 bg-gray-100 rounded-lg shadow-lg'>
               <h2 className='text-2xl font-bold mb-4 text-gray-700'>Comments - </h2>
-              {hasPermission('add_comment')&&(<textarea
+              {hasPermission('Add Comment')&&(<textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
                 className='w-full p-3 mb-3 border border-gray-300 rounded-lg shadow-md'
               />)}
-              {hasPermission('add_comment')&&(<button onClick={handleCommentSubmitFunction} className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 mb-3'>Add Comment</button>)}
+              {hasPermission('Add Comment')&&(<button onClick={handleCommentSubmitFunction} className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 mb-3'>Add Comment</button>)}
               {comments.length > 0 ? (
               <ul className='space-y-4'>
                 {comments.map((comment, i) => (
@@ -87,7 +90,7 @@ const Blog = () => {
                       <strong className='text-gray-800'>{comment.username}</strong>: {comment.content}
                     </p>
                     <p className='text-xs text-gray-500 mt-2'>{new Date(comment.created_at).toLocaleString()}</p>
-                    {(userId == comment.user_id || hasPermission('delete_any_comment')) && (
+                    {(userId == comment.user_id || hasPermission('Delete Any Comment')) && (
                       <button
                         onClick={() => handleCommentDelete(comment.id)}
                         className='mt-2 text-red-500 hover:text-red-700'

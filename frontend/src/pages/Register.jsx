@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -49,6 +49,19 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const {password,confirm_password} = formData;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,}$/;
+    if (!passwordRegex.test(password)) {
+        setError("Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+        setSuccess(null);
+        return;
+    }
+    if (password !== confirm_password) {
+        setError("Passwords do not match");
+        setSuccess(null);
+        return;
+    }
+
         try {
             const res = await axios.post('http://localhost:3000/api/register', formData);
             setSuccess("The User is Successfully Registered!");
@@ -70,7 +83,7 @@ const Register = () => {
         }
     }
     const hasPermission = (permissionName) => permissions.includes(permissionName);
-    if (!hasPermission('add_user')) {
+    if (!hasPermission('Add User')) {
         return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
     }
     return (
