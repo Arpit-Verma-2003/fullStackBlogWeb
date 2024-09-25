@@ -47,7 +47,6 @@ const Editblog = () => {
             navigate('/login');
           }
           setAuthorId(details.uid);
-        //   validateAuthor(authorId);
           setPermissions(details.cpermissions);
         }
         fetch();
@@ -116,7 +115,7 @@ const Editblog = () => {
                 </select>
                 <label htmlFor="" className='ml-1 text-gray-500'>Image (Leave Empty For No Change)</label>
                 <input type="file" required onChange={(e)=>handleImage(e)} className='h-10 border border-gray-300 rounded my-2 p-2'/>
-                {/* <ReactQuill theme="snow" ref={quillRef} className='bg-white rounded mb-2 mt-2 editingarea' value={blogData.post} onChange={(e)=>{setBlogData({...blogData,post:e})}} /> */}
+                <label htmlFor="" className='ml-1 text-gray-500 mb-2'>Content</label>
                 <CKEditor
                         editor={ClassicEditor}
                         data={blogData.post}

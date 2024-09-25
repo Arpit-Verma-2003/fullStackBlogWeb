@@ -61,6 +61,10 @@ const Createblog = () => {
             alert("Please Enter The Title");
             return;
         }
+        if (blogWithAuthor.title.length < 5) {
+            alert("Title must be at least 5 characters long.");
+            return;
+        }
         if(!blogWithAuthor.category){
             alert("Please Select The Category");
             return;
@@ -68,6 +72,10 @@ const Createblog = () => {
         
         if(!blogWithAuthor.post){
             alert("Please Enter Some Content");
+            return;
+        }
+        if (blogWithAuthor.post.length < 10) {
+            alert("Content must be at least 10 characters long.");
             return;
         }
         
@@ -98,7 +106,7 @@ const Createblog = () => {
                 </select>
                 <label htmlFor="" className='ml-1 text-gray-500'>Image</label>
                 <input type="file" required onChange={(e)=>handleImage(e)} className='h-10 border border-gray-300 rounded my-2 p-2'/>
-                {/* <ReactQuill theme="snow" className='bg-white rounded mb-2 mt-2 editingarea' value={newblog.post} onChange={(e)=>{setNewblog({...newblog,post:e})}} /> */}
+                <label htmlFor="" className='ml-1 text-gray-500 mb-2'>Content</label>
                 <CKEditor
                         editor={ClassicEditor}
                         data={newblog.post}

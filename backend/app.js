@@ -128,6 +128,17 @@ app.put('/users/:userId/role', async (req, res) => {
   }
 });
 
+app.delete('/users/:userId',async (req,res)=>{
+  const {userId} = req.params;
+  try {
+    await client.query(queries.deleteSelectedUser,[userId]);
+    res.status(200).json({message:'User Successfully Deleted'});
+  } catch (error) {
+    console.error('Error Deleting The User :', error);
+    res.status(500).json({ message: 'Error Deleting The User' });
+  }
+})
+
 app.put('/blogs/:id',async(req,res)=>{
   const {id} = req.params;
   const { title, image, post, category} = req.body;
@@ -215,7 +226,7 @@ app.get('/blogs/:cat',async (req,res)=>{
   ? `SELECT * FROM blogs WHERE category = '${cat}'`
   : `SELECT * FROM blogs `;
   if (search) {
-    if(cat!=='all') query += ` AND title ILIKE '%${search}%' OR post ILIKE '%${search}%'`;
+    if(cat!=='all') query += ` AND (title ILIKE '%${search}%' OR post ILIKE '%${search}%')`;
     else query += `WHERE title ILIKE '%${search}%' OR post ILIKE '%${search}%'`
   }
   query+= `LIMIT ${limit} OFFSET ${offset}`;
@@ -246,6 +257,21 @@ app.post('/categories',async(req,res)=>{
   } catch (error) {
     console.log(error);
     res.status(500).json({message:"Error in adding the category"});
+  }
+})
+
+app.delete('/categories/:categoryName',async(req,res)=>{
+  const {categoryName} = req.params;
+  try {
+    const result = await client.query(queries.deleteCategory, [categoryName]);
+    if (result.rowCount > 0) {
+      return res.status(200).json({ success: true, message: 'Category deleted successfully' });
+    } else {
+      return res.status(404).json({ success: false, message: 'Category not found' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Error in deleting the category"});
   }
 })
 

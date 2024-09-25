@@ -22,30 +22,30 @@ const Adminpanel = () => {
   return (
     <div className="min-h-[500px] bg-gray-100 flex flex-col items-center justify-center p-6">
         <h1 className='text-4xl font-extrabold text-gray-900 mb-8'>Admin Panel</h1>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl w-full">
         <Link
           to={'/register'}
           className="block w-full max-w-md mx-auto p-4 bg-indigo-600 text-white text-center rounded-lg shadow-md"
         >
-          <h5 className="text-lg font-semibold">Create a new user</h5>
+          <h5 className="text-lg font-semibold">Create a New User</h5>
         </Link>
         <Link
           to={'/createrole'}
-          className="block w-full max-w-md mx-auto p-4 bg-green-600 text-white text-center rounded-lg shadow-md"
+          className="block w-full max-w-md mx-auto p-4 bg-indigo-600 text-white text-center rounded-lg shadow-md"
         >
-          <h5 className="text-lg font-semibold">Create a new role</h5>
+          <h5 className="text-lg font-semibold">Create a New Role</h5>
         </Link>
         <Link
           to={'/addcategory'}
           className="block w-full max-w-md mx-auto p-4 bg-green-600 text-white text-center rounded-lg shadow-md"
         >
-          <h5 className="text-lg font-semibold">Add a category</h5>
+          <h5 className="text-lg font-semibold">Modify Categories</h5>
           </Link>
         <Link
           to={'/allusers'}
           className="block w-full max-w-md mx-auto p-4 bg-green-600 text-white text-center rounded-lg shadow-md"
         >
-          <h5 className="text-lg font-semibold">See all users</h5>
+          <h5 className="text-lg font-semibold">Modify Users</h5>
           </Link>
           <Link
           to={'/allblogs'}
@@ -53,7 +53,6 @@ const Adminpanel = () => {
         >
           <h5 className="text-lg font-semibold">Modify Blogs</h5>
           </Link>
-          
       </div>
     </div>
   )

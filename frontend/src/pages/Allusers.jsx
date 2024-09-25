@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getUsers, updateUserRole, getRoles } from '../../Api/Api';
+import { getUsers, updateUserRole, getRoles, deleteSelectedUser } from '../../Api/Api';
 import { LoginContext } from '../context/LoginC';
 import { useNavigate } from 'react-router-dom';
 const Allusers = () => {
@@ -45,6 +45,16 @@ const Allusers = () => {
             alert('Failed to update role');
           }
         };
+        const handleDeleteUser = async(userId) =>{
+          try {
+            await deleteSelectedUser(userId);
+            const usersData = await getUsers();
+            setUsers(usersData);
+            alert('User Deleted Successfully');
+          } catch (error) {
+            console.log('Error Deleting The User:',error);
+          }
+        }
         const hasPermission = (permissionName) => permissions.includes(permissionName);
     if (!hasPermission('All Users')) {
       return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
@@ -72,8 +82,8 @@ const Allusers = () => {
                       onChange={(e) => handleRoleChange(user.id, e.target.value)}
                       className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
                     >
-                      {roles.map((role) => (
-                        <option>
+                      {roles.map((role,i) => (
+                        <option key={i}>
                           {role.role_name}
                         </option>
                       ))}
@@ -85,6 +95,14 @@ const Allusers = () => {
                       className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700"
                     >
                       Update Role
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleDeleteUser(user.id)}
+                      className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700"
+                    >
+                      Delete User
                     </button>
                   </td>
                 </tr>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { addCategory, fetchCategories } from '../../Api/Api';
+import { addCategory, deleteCategory, fetchCategories } from '../../Api/Api';
 import {useNavigate } from 'react-router-dom'
 import { LoginContext } from '../context/LoginC';
 const Addcategory = () => {
@@ -39,6 +39,18 @@ const Addcategory = () => {
           alert("Category Added Successfully");
         }
       };
+      const handleDeleteCategory = async (categoryName) => {
+        const confirmed = window.confirm(`Are you sure you want to delete the category "${categoryName}"?`);
+        if (confirmed) {
+          const response = await deleteCategory(categoryName);
+          if (response.success) {
+            setCategories(categories.filter((category) => category.name !== categoryName));
+            alert("Category deleted successfully.");
+          } else {
+            alert("Failed to delete category.");
+          }
+        }
+      };
   const hasPermission = (permissionName) => permissions.includes(permissionName);
   if(details === null){
     return <div>Loading...</div>
@@ -48,30 +60,44 @@ const Addcategory = () => {
     return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
   }
   return (
-    <div>
-        <h2 className='text-xl font-semibold mb-4'>Currently Added Categories : </h2>
-        <ul className='flex flex-wrap gap-3'>
-            {categories.map((x,i)=>{
-                return <li key={i} className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition-colors">{x.name}</li>
-            })}
-        </ul>
-        <div className='mt-5'>
-        <h3 className='text-lg font-medium'>Add New Category</h3>
+    <div className="p-6 bg-gray-50 min-h-screen">
+    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Currently Added Categories:</h2>
+    <ul className="space-y-2">
+      {categories.map((category, index) => (
+        <li
+          key={index}
+          className="flex justify-between items-center bg-blue-100 text-blue-800 p-3 rounded-lg shadow-sm"
+        >
+          <span className="font-medium text-lg">{category.name}</span>
+          <button
+            onClick={() => handleDeleteCategory(category.name)}
+            className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-colors"
+          >
+            Delete
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <div className="mt-8">
+      <h3 className="text-lg font-medium text-gray-800">Add New Category</h3>
+      <div className="flex mt-3">
         <input
           type="text"
           placeholder="Enter category name"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
-          className='border rounded p-2 my-2 w-[200px]'
+          className="border rounded p-2 w-full sm:w-64"
         />
         <button
           onClick={handleAddCategory}
-          className='bg-green-500 text-white ml-3 py-2 px-4 rounded hover:bg-green-600 transition-colors'
+          className="ml-3 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition-colors"
         >
           Add Category
         </button>
-        </div>
+      </div>
     </div>
+  </div>
   )
 }
 

@@ -42,6 +42,19 @@ export const updateUserRole = async (userId, newRoleId) => {
   await axios.put(`${apiUrl}/users/${userId}/role`, { newRoleId });
 };
 
+export const deleteSelectedUser = async(userId)=>{
+  await axios.delete(`${apiUrl}/users/${userId}`);
+}
+
+export const deleteCategory = async (categoryName) =>{
+  try {
+    const result = await axios.delete(`${apiUrl}/categories/${categoryName}`);
+    return result.data;
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
 export const fetchCategories = async()=>{
   try {
     const response = await axios.get(apiUrl+'/categories');
