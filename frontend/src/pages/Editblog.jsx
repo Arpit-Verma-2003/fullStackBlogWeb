@@ -1,9 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import React, { useContext, useEffect, useRef, useState } from 'react';;
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
 import { uploadImage, getBlogById, fetchCategories,checkLogin, updateBlog } from '../../Api/Api'
 import { useNavigate, useParams } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
@@ -15,14 +12,13 @@ const Editblog = () => {
         "post" : "<p><br></p>",
         "category" : ""
     }
-
     const details = useContext(LoginContext);
     const [permissions,setPermissions] = useState([]);
     const [blogData,setBlogData] = useState(blankBlog);
     const [image, setImage] = useState(null);
+    const [authorId,setAuthorId] = useState(null);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const quillRef = useRef(null);
     const { id } = useParams(); 
     const navigate = useNavigate();
     useEffect(() => {
@@ -50,6 +46,8 @@ const Editblog = () => {
           if(details.login === false){
             navigate('/login');
           }
+          setAuthorId(details.uid);
+        //   validateAuthor(authorId);
           setPermissions(details.cpermissions);
         }
         fetch();

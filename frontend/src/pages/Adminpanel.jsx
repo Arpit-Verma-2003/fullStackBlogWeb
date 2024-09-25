@@ -47,6 +47,12 @@ const Adminpanel = () => {
         >
           <h5 className="text-lg font-semibold">See all users</h5>
           </Link>
+          <Link
+          to={'/allblogs'}
+          className="block w-full max-w-md mx-auto p-4 bg-green-600 text-white text-center rounded-lg shadow-md"
+        >
+          <h5 className="text-lg font-semibold">Modify Blogs</h5>
+          </Link>
           
       </div>
     </div>

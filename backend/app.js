@@ -49,7 +49,7 @@ app.get('/checkLogin',async (req,res)=>{
           const roleId = req.session.user.role;
           const result = await client.query(queries.getRolePermissions,[roleId]);
           const permissions = result.rows.map(row=>row.permission_name);
-          return res.json({"valid":true,"role":req.session.user.role,"username":req.session.user.username,"permissions":permissions});
+          return res.json({"valid":true,"role":req.session.user.role,"username":req.session.user.username,"permissions":permissions,"id":req.session.user.id});
         } catch (error) {
           console.log(error);
           return res.status(500).json({ message: 'Error fetching role permissions' });
@@ -278,7 +278,8 @@ app.post('/blogsimage', upload.single('file'), function (req, res, next) {
 app.delete('/api/blogs/:id', async (req, res) => {
   const blogId = req.params.id;
   const userId = req.session.user.id; 
-    const result = await client.query('DELETE FROM blogs WHERE id = $1 AND author_id = $2 RETURNING *', [blogId, userId]);
+  
+    const result = await client.query('DELETE FROM blogs WHERE id = $1 RETURNING *', [blogId]);
     if (result.rows.length > 0) {
       res.json({ valid: true, message: "Blog deleted" });
     } else {

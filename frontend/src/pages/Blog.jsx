@@ -61,7 +61,7 @@ const Blog = () => {
   const hasPermission = (permissionName) => permissions.includes(permissionName);
   return (
     <div className='flex justify-center items-center'>
-        {blog && <div className='flex flex-col w-[70%] overflow-hidden'>
+        {blog && <div className='flex flex-col w-[70%] overflow-hidden '>
             <h1 className='mt-1 text-3xl font-extrabold'>{blog.title}</h1>
             <div className='flex my-4 items-center font-semibold'>
                 <small>{dateFormat(blog.createdon,"dddd, mmmm dS, yyyy, h:MM TT")} |&nbsp;</small>
@@ -69,8 +69,8 @@ const Blog = () => {
             </div>
               <img className='rounded-lg object-scale-down max-w-full max-h-full w-[800px] h-[500px]' src={apiUrl+blog.image} alt="photo_lorem" />
             
-            <div className='justify-start mt-5'>
-              <div className='prose justify-start'>
+            <div className='justify-start mt-5 w-full'>
+                <div className='prose w-full max-w-none'>
                 {parse(blog.post)}
               </div>
             </div>
