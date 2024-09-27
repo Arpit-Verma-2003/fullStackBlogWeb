@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import { checkLogin, fetchCategories } from '../../Api/Api'
 import axios from 'axios'
 import { LoginContext } from '../context/LoginC';
+const apiUrl = 'http://localhost:3000';
 const Layout = () => {
   const loginVar = useContext(LoginContext);
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
@@ -38,7 +39,7 @@ const Layout = () => {
     })
     if((await confirmLogout).isConfirmed){
       try {
-        const response = await axios.post('http://localhost:3000/api/logout', {}, { withCredentials: true });
+        const response = await axios.post(`${apiUrl}/api/logout`, {}, { withCredentials: true });
         if (response.status === 200) {
           Swal.fire("Logout Successful");
           console.log("Logout successful");

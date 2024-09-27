@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+const apiUrl = "http://localhost:3000";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ axios.defaults.withCredentials = true;
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:3000/api/login', formData);
+      const res = await axios.post(`${apiUrl}/api/login`, formData);
       Swal.fire("Login Successful");
       setSuccess("Login Successful Redirecting To Home Page");
       loginVar.setLogin(true);

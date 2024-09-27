@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+const apiUrl = "http://localhost:3000";
 const Register = () => {
     const [formData, setFormData] = useState({
         username: "",
@@ -20,7 +21,7 @@ const Register = () => {
 
     const fetchRoles = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/roles');
+            const response = await axios.get(`${apiUrl}/roles`);
             setRoles(response.data);
             console.log(roles);
         } catch (err) {
