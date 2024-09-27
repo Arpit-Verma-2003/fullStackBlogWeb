@@ -1,5 +1,6 @@
 import React, { useContext, useEffect ,useState } from 'react'
 import { Link, Outlet,useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 import Footer from '../components/Footer'
 import { checkLogin, fetchCategories } from '../../Api/Api'
 import axios from 'axios'
@@ -29,12 +30,17 @@ const Layout = () => {
     fetchData();
   },[navigate]);
   const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout");
-    if(confirmLogout){
+    const confirmLogout = Swal.fire({
+      text : "Are you sure you want to logout",
+      showCancelButton : true,
+      confirmButtonText : "Yes",
+      confirmButtonColor: '#d33'
+    })
+    if((await confirmLogout).isConfirmed){
       try {
         const response = await axios.post('http://localhost:3000/api/logout', {}, { withCredentials: true });
         if (response.status === 200) {
-          alert("Logout Successful");
+          Swal.fire("Logout Successful");
           console.log("Logout successful");
           loginVar.setLogin(false);
           loginVar.setCPermissions([]);

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Blogcard from '../components/Blogcard'
+import Swal from 'sweetalert2';
 import { getBlogs,deleteBlog } from '../../Api/Api'
 import { useSearchParams ,useNavigate } from "react-router-dom";
 import { LoginContext } from '../context/LoginC';
@@ -47,20 +48,29 @@ const AllBlogs = () => {
       }
     }, [page,category,searchQuery]);
     const handleDelete = async (blogId) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this blog?");
-        if (confirmDelete) {
+      const confirmDelete = await Swal.fire({
+        text:"Are you sure you want to delete this blog?",
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        confirmButtonColor: '#d33'
+      });
+      if (confirmDelete.isConfirmed) {
           const response = await deleteBlog(blogId);
           if (response.valid) {
             setBlogs(blogs.filter(blog => blog.id !== blogId));
-            alert("Blog deleted successfully");
+            Swal.fire("Blog deleted successfully");
           } else {
-            alert("Failed to delete blog");
+            Swal.fire("Failed to delete blog");
           }
         }
     };
     const handleEdit = async(blogId) =>{
-      const confirmEdit = window.confirm("Are you sure you want to edit this blog?");
-      if(confirmEdit) navigate(`/editblog/${blogId}`);
+      const confirmEdit = await Swal.fire({
+        text:"Are you sure you want to edit this blog?",
+        confirmButtonText: 'Yes',
+        showCancelButton: true
+      });
+      if(confirmEdit.isConfirmed) navigate(`/editblog/${blogId}`);
     }
     const loadMore = () => {
       setPage(prevPage => prevPage + 1);

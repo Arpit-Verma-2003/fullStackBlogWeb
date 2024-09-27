@@ -3,6 +3,7 @@ import { checkLogin, deleteComment, getBlogById, getCommentsByBlogId, getUserId,
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import dateFormat from "dateformat";
+import Swal from 'sweetalert2';
 import { LoginContext } from '../context/LoginC';
 const Blog = () => {
   const {id} = useParams();
@@ -36,21 +37,31 @@ const Blog = () => {
 
   const handleCommentSubmitFunction = async ()=>{
     if(newComment.trim()===""){
-      alert("You can't add an empty comment");
+      Swal.fire({
+        text : "You can't add an empty comment",
+        icon: 'warning'
+    });
       return;
     }
     await handleCommentSubmit(id,userId, newComment);
-    alert("Comment Added Successfully");
+    Swal.fire("Comment Added Successfully");
     setNewComment(''); 
     const commentsData = await getCommentsByBlogId(id);
     setComments(commentsData.data);
   }
 
   const handleCommentDelete = async (commentId) => {
-    if (window.confirm("Are you sure you want to delete this comment?")) {
+    const confirmedDelete = Swal.fire({
+      text : "Are you sure you want to delete this comment?",
+      showCancelButton : true,
+      confirmButtonText : "Yes",
+      confirmButtonColor: '#d33',
+      icon: 'warning'
+  });
+    if ((await confirmedDelete).isConfirmed) {
       try {
         await deleteComment(commentId, userId);
-        alert("Comment Deleted Successfully");
+        Swal.fire("Comment Deleted Successfully");
         const commentsData = await getCommentsByBlogId(id);
         setComments(commentsData.data);
       } catch (error) {

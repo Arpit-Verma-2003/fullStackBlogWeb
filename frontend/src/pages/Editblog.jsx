@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';;
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import Swal from 'sweetalert2';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { uploadImage, getBlogById, fetchCategories,checkLogin, updateBlog } from '../../Api/Api'
@@ -57,15 +58,34 @@ const Editblog = () => {
 
     const handleSubmit = async () => {
         if (!blogData.title) {
-            alert('Please Enter The Title');
+            Swal.fire({
+                text:"Please Enter The Title",
+                icon: 'warning'
+            });
+            return;
+        }
+        if (blogData.title.length < 5) {
+            Swal.fire({ text: "Title must be at least 5 characters long.",
+                icon: 'warning'
+            });
             return;
         }
         if (!blogData.category) {
-            alert('Please Select The Category');
+            Swal.fire({ text: "Please Select The Category",
+                icon: 'warning'
+            });
             return;
         }
         if (blogData.post === '<p><br></p>') {
-            alert('Please Enter Some Content');
+            Swal.fire({ text: "Please Enter Some Content",
+                icon: 'warning'
+            });
+            return;
+        }
+        if (blogData.post.length < 25) {
+            Swal.fire({text:"Content must be at least 20 characters long.",
+                icon:'warning'
+            });
             return;
         }
 
@@ -75,7 +95,9 @@ const Editblog = () => {
             if (uploadFile.path) {
                 imagePath = uploadFile.path;
             } else {
-                alert('Image Upload Failed');
+                Swal.fire({text:'Image Upload Failed',
+                    icon:'error'
+                });
                 return;
             }
         }
@@ -86,10 +108,12 @@ const Editblog = () => {
         };
         const result = await updateBlog(id, updatedBlog);
         if (result.success) {
-            alert('Blog Updated Successfully');
+            Swal.fire('Blog Updated Successfully');
             navigate(`/blog/${id}`);
         } else {
-            alert('Failed to Update Blog');
+            Swal.fire({text:'Failed to Update Blog',
+                icon: 'error'
+            });
         }
     };
     const hasPermission = (permissionName) => permissions.includes(permissionName);

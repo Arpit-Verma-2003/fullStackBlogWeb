@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import ReactQuill from 'react-quill';
+import Swal from 'sweetalert2';
 import 'react-quill/dist/quill.snow.css';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -46,43 +46,59 @@ const Createblog = () => {
     const handleSubmit = async()=>{
         const checkLogined = await checkLogin(); 
         if(!image){
-            alert("Please Upload An Image");
+            Swal.fire({text:"Please Upload An Image",
+                icon:'warning'
+            });
             return;
         }
         let uploadFile = await uploadImage(image);
         if(uploadFile.path){
             setNewblog({...newblog,image:uploadFile.path});
         }else{
-            alert('Image Upload Failed');
+            Swal.fire({
+                text:"Image Upload Failed",
+                icon: 'warning'
+            });
             return;
         }
         const blogWithAuthor = { ...newblog, author: checkLogined.username,image: uploadFile.path };
         if(!blogWithAuthor.title){
-            alert("Please Enter The Title");
+            Swal.fire({
+                text:"Please Enter The Title",
+                icon: 'warning'
+            });
             return;
         }
         if (blogWithAuthor.title.length < 5) {
-            alert("Title must be at least 5 characters long.");
+            Swal.fire({ text: "Title must be at least 5 characters long.",
+                icon: 'warning'
+            });
             return;
         }
         if(!blogWithAuthor.category){
-            alert("Please Select The Category");
+            Swal.fire({ text: "Please Select The Category",
+                icon: 'warning'
+            });
             return;
         }
         
         if(!blogWithAuthor.post){
-            alert("Please Enter Some Content");
+            Swal.fire({ text: "Please Enter Some Content",
+                icon: 'warning'
+            });
             return;
         }
-        if (blogWithAuthor.post.length < 10) {
-            alert("Content must be at least 10 characters long.");
+        if (blogWithAuthor.post.length < 25) {
+            Swal.fire({text:"Content must be at least 20 characters long.",
+                icon:'warning'
+            });
             return;
         }
         
         let createdBlog = await postBlogs(blogWithAuthor);
         if(createdBlog.data == 1){
             setNewblog(blankBlog);
-            alert("New Blog Added Sucessfully");
+            Swal.fire("New Blog Added Sucessfully");
             navigate('/');
         }
     }

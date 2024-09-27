@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { addCategory, deleteCategory, fetchCategories } from '../../Api/Api';
 import {useNavigate } from 'react-router-dom'
 import { LoginContext } from '../context/LoginC';
+import Swal from 'sweetalert2';
 const Addcategory = () => {
     const navigate = useNavigate();
     const [categories,setCategories] = useState([]);
@@ -36,18 +37,24 @@ const Addcategory = () => {
         if (response.success) {
           setCategories([...categories, { name: newCategory }]);
           setNewCategory("");
-          alert("Category Added Successfully");
+          Swal.fire("Category Added Successfully");
         }
       };
       const handleDeleteCategory = async (categoryName) => {
-        const confirmed = window.confirm(`Are you sure you want to delete the category "${categoryName}"?`);
-        if (confirmed) {
+        const confirmed = Swal.fire({text:`Are you sure you want to delete the category "${categoryName}"?`,
+            showCancelButton : true,
+            confirmButtonText : "Yes",
+            confirmButtonColor: '#d33'
+          });
+        if ((await confirmed).isConfirmed) {
           const response = await deleteCategory(categoryName);
           if (response.success) {
             setCategories(categories.filter((category) => category.name !== categoryName));
-            alert("Category deleted successfully.");
+            Swal.fire("Category deleted successfully.");
           } else {
-            alert("Failed to delete category.");
+            Swal.fire({text:"Failed to delete category.",
+              icon: "warning"
+            });
           }
         }
       };

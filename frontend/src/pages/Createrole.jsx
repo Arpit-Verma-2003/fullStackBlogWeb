@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { createRole, getPermissions } from '../../Api/Api'
 import { useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+import Swal from 'sweetalert2';
 const Createrole = () => {
     const [permissions, setPermissions] = useState([]);
     const [roleName, setRoleName] = useState('');
@@ -41,12 +42,14 @@ const Createrole = () => {
         };
         try {
             await createRole(newRole);
-            alert('Role created successfully!');
+            Swal.fire('Role created successfully!');
             setRoleName('');
             setSelectedPermissions([]);
           } catch (err) {
             console.error('Error creating role:', err);
-            alert('Failed to create role');
+            Swal.fire({text:'Failed to create role',
+              icon: 'warning'
+            });
           }
     }
     const hasPermission = (permissionName) => userpermissions.includes(permissionName);

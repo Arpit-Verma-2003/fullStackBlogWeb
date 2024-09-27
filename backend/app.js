@@ -5,6 +5,7 @@ const flash = require("express-flash");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/')
@@ -18,7 +19,7 @@ const client = require('./db/connection');
 const queries = require("./db/queries");
 const bodyParser = require('body-parser');
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors({
@@ -163,9 +164,9 @@ app.post('/roles',async(req,res)=>{
     for(const permissionId of permissionIds){
       await client.query(queries.addRoleWPermissions,[roleId,permissionId]);
     }
-    res.status(201).json({message:"added a new role successfully"});
+    res.status(201).json({message:"Added a new role successfully"});
   } catch (error) {
-    res.status(500).json({message:"unable to add the new role",err:error});
+    res.status(500).json({message:"Unable to add the new role",err:error});
   }
 })
 

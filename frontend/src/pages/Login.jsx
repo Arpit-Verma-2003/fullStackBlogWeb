@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -25,11 +27,12 @@ axios.defaults.withCredentials = true;
 
     try {
       const res = await axios.post('http://localhost:3000/api/login', formData);
+      Swal.fire("Login Successful");
       setSuccess("Login Successful Redirecting To Home Page");
       loginVar.setLogin(true);
       setTimeout(() => {
         navigate('/');
-      }, 2000);
+      }, 1000);
     } catch (err) {
       setError(err.response?.data?.message || "Error logging in");
     }

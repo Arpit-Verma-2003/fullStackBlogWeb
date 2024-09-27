@@ -1,9 +1,9 @@
 const pg = require('pg');
 const { Client } = pg;
-
+require("dotenv").config();
 const client = new Client({
-    user: 'postgres',
-    password: '12345',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     host: 'localhost',
     port: 5432,
     database: 'blogapp',
@@ -11,9 +11,6 @@ const client = new Client({
 
 async function name() {
     await client.connect()
-    // const res = await client.query('SELECT * from blogs')
-    // console.log(res.rows[0]) // Hello world!
-    // await client.end()
 }
 name();
 module.exports = client;

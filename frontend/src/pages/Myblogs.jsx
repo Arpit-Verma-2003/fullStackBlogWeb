@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Blogcard from '../components/Blogcard'
+import Swal from 'sweetalert2';
 import { deleteBlog, getBlogsByAuthor } from '../../Api/Api';
 import {useNavigate } from 'react-router-dom'
 import { LoginContext } from '../context/LoginC';
@@ -10,20 +11,29 @@ const Myblogs = () => {
     const [blogs,setBlogs] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const handleDelete = async (blogId) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this blog?");
-        if (confirmDelete) {
+        const confirmDelete = await Swal.fire({
+          text:"Are you sure you want to delete this blog?",
+          confirmButtonText: 'Yes',
+          showCancelButton: true,
+          confirmButtonColor: '#d33'
+        });
+        if (confirmDelete.isConfirmed) {
           const response = await deleteBlog(blogId);
           if (response.valid) {
             setBlogs(blogs.filter(blog => blog.id !== blogId));
-            alert("Blog deleted successfully");
+            Swal.fire("Blog deleted successfully");
           } else {
-            alert("Failed to delete blog");
+            Swal.fire("Failed to delete blog");
           }
         }
     };
     const handleEdit = async(blogId) =>{
-      const confirmEdit = window.confirm("Are you sure you want to edit this blog?");
-      if(confirmEdit) navigate(`/editblog/${blogId}`);
+      const confirmEdit = await Swal.fire({
+        text:"Are you sure you want to edit this blog?",
+        confirmButtonText: 'Yes',
+        showCancelButton: true
+      });
+      if(confirmEdit.isConfirmed) navigate(`/editblog/${blogId}`);
     }
     useEffect(()=>{
       async function fetch() {
@@ -55,7 +65,7 @@ const Myblogs = () => {
     <>
       <div className='mb-4'>
             <input
-                type='text' placeholder='Search blogs...' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                type='text' placeholder='Search your blogs...' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                 className='w-full p-2 border border-gray-300 rounded-md'
             />
         </div>

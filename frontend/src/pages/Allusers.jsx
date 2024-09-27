@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getUsers, updateUserRole, getRoles, deleteSelectedUser } from '../../Api/Api';
 import { LoginContext } from '../context/LoginC';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 const Allusers = () => {
         const [users, setUsers] = useState([]);
         const [roles, setRoles] = useState([]);
@@ -39,21 +40,34 @@ const Allusers = () => {
             await updateUserRole(userId, newRoleId);
             const usersData = await getUsers();
             setUsers(usersData);
-            alert('Role updated successfully!');
+            Swal.fire('Role updated successfully!');
           } catch (err) {
             console.error('Error updating role:', err);
-            alert('Failed to update role');
+            Swal.fire({text:'Failed to update role',
+              icon :'warning'
+            });
           }
         };
         const handleDeleteUser = async(userId) =>{
-          try {
-            await deleteSelectedUser(userId);
-            const usersData = await getUsers();
-            setUsers(usersData);
-            alert('User Deleted Successfully');
-          } catch (error) {
-            console.log('Error Deleting The User:',error);
+          const confirmDelete = Swal.fire({text:"Are you sure you want to delete this user?",
+            icon: 'warning',
+            showCancelButton : true,
+            confirmButtonText : "Yes",
+            confirmButtonColor : '#d33'
+          })
+          if((await confirmDelete).isConfirmed){
+            try {
+              await deleteSelectedUser(userId);
+              const usersData = await getUsers();
+              setUsers(usersData);
+              Swal.fire('User Deleted Successfully');
+            } catch (error) {
+              console.log('Error Deleting The User:',error);
+            }
+          }else{
+            return;
           }
+          
         }
         const hasPermission = (permissionName) => permissions.includes(permissionName);
     if (!hasPermission('All Users')) {
