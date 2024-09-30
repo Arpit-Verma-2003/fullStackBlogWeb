@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
-const apiUrl = "http://localhost:3000";
+const apiUrl = "https://blog-backend-hcqx.onrender.com";
 
 const Login = () => {
   const [formData, setFormData] = useState({
