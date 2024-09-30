@@ -7,7 +7,7 @@ import axios from 'axios'
 import { LoginContext } from '../context/LoginC';
 import Spinner from '../components/Spinner';
 
-const apiUrl = 'http://localhost:3000';
+const apiUrl = 'https://blog-backend-hcqx.onrender.com';
 const Layout = () => {
   const loginVar = useContext(LoginContext);
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
