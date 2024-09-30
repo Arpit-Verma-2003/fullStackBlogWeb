@@ -1,5 +1,5 @@
 import axios from "axios";
-const apiUrl = "http://localhost:3000";
+const apiUrl = "https://blog-backend-hcqx.onrender.com";
 export const getBlogs = (cat = 'all', page = 1, limit = 9,searchQuery = '') => {
   return axios
     .get(apiUrl + `/blogs/${cat}?page=${page}&limit=${limit}&search=${searchQuery}`)
