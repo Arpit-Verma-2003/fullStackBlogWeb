@@ -15,7 +15,7 @@ const Blog = () => {
   const details = useContext(LoginContext);
   const [permissions,setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const apiUrl = "http://localhost:3000/";
+  const apiUrl = "https://blog-backend-hcqx.onrender.com/";
   useEffect(()=>{
     window.scrollTo(0, 0);
     async function fetchData() {
