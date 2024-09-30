@@ -23,7 +23,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:5173"],
+  origin: ["https://blog-frontend-ndqn.onrender.com"],
   methods: ["POST","GET","DELETE","PUT"],
   credentials: true 
 }));
