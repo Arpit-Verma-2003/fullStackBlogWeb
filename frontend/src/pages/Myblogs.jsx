@@ -4,12 +4,14 @@ import Swal from 'sweetalert2';
 import { deleteBlog, getBlogsByAuthor } from '../../Api/Api';
 import {useNavigate } from 'react-router-dom'
 import { LoginContext } from '../context/LoginC';
+import Spinner from '../components/Spinner';
 const Myblogs = () => {
     const navigate = useNavigate();
     const loginVar = useContext(LoginContext);
     const [permissions,setPermissions] = useState([]);
     const [blogs,setBlogs] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [loading, setLoading] = useState(false);
     const handleDelete = async (blogId) => {
         const confirmDelete = await Swal.fire({
           text:"Are you sure you want to delete this blog?",
@@ -46,7 +48,9 @@ const Myblogs = () => {
     },[loginVar,navigate])
     useEffect(()=>{
         async function fetchData() {
+          setLoading(true);
           const allBlogs = await getBlogsByAuthor(searchQuery);
+          setLoading(false);
           if(!allBlogs.valid){
             navigate('/login');
           }
@@ -55,7 +59,7 @@ const Myblogs = () => {
         fetchData();
       },[searchQuery]);
   if(loginVar === null){
-        return <div>Loading...</div>
+        return <Spinner/>
       }
       const hasPermission = (permissionName) => permissions.includes(permissionName);
       if (!hasPermission('View My Blogs')) {
@@ -69,14 +73,16 @@ const Myblogs = () => {
                 className='w-full p-2 border border-gray-300 rounded-md'
             />
         </div>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
+      {loading ? (
+        <Spinner />
+      ) :(<div className='grid sm:grid-cols-2 md:grid-cols-3 gap-3'>
           {blogs &&  blogs.length > 0 ? ( blogs.map((x,i)=>{
             return <Blogcard key={i} blogData = {x} handleDelete={handleDelete} handleEdit={handleEdit}
             showDelete={true} showEdit={true}/>
           })) :(
             <p>No Blogs Found :(</p>
           )}
-      </div>
+      </div>)}
     </>
   )
 }

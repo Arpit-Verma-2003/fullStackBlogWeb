@@ -5,16 +5,20 @@ import Footer from '../components/Footer'
 import { checkLogin, fetchCategories } from '../../Api/Api'
 import axios from 'axios'
 import { LoginContext } from '../context/LoginC';
+import Spinner from '../components/Spinner';
+
 const apiUrl = 'http://localhost:3000';
 const Layout = () => {
   const loginVar = useContext(LoginContext);
   const [checkLoginAccess, setCheckLoginAccess] = useState(false);
   const [permissions,setPermissions] = useState([]);
   const [categories,setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
   useEffect(()=>{
     async function fetchData() {
+      setLoading(true);
       const checkLogined = await checkLogin();
       if(!checkLogined.valid){
         console.log("You are not logined");
@@ -26,6 +30,7 @@ const Layout = () => {
       const fetchedCategories = await fetchCategories();
       if(fetchedCategories){
         setCategories(fetchedCategories.data);
+        setLoading(false);
       }
     }
     fetchData();
@@ -78,7 +83,7 @@ const Layout = () => {
       {/* body */}
       <div className="flex mx-auto justify-center">
         <div className='my-5 min-h-[500px] w-[1280px]'>
-          <Outlet></Outlet>        
+        {loading ? <Spinner /> : <Outlet />}     
         </div>
       </div>
       <Footer/>

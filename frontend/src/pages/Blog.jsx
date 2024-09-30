@@ -5,6 +5,7 @@ import parse from 'html-react-parser';
 import dateFormat from "dateformat";
 import Swal from 'sweetalert2';
 import { LoginContext } from '../context/LoginC';
+import Spinner from '../components/Spinner';
 const Blog = () => {
   const {id} = useParams();
   const [blog,setBlog] = useState(null);
@@ -13,6 +14,7 @@ const Blog = () => {
   const [userId,setUserId] = useState(null);
   const details = useContext(LoginContext);
   const [permissions,setPermissions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const apiUrl = "http://localhost:3000/";
   useEffect(()=>{
     window.scrollTo(0, 0);
@@ -23,6 +25,7 @@ const Blog = () => {
       setComments(commentsData.data);
       const uid = await getUserId();
       setUserId(uid.userId);
+      setLoading(false);
     }
     fetchData();
   },[]);
@@ -72,7 +75,9 @@ const Blog = () => {
   const hasPermission = (permissionName) => permissions.includes(permissionName);
   return (
     <div className='flex justify-center items-center'>
-        {blog && <div className='flex flex-col w-[70%] overflow-hidden '>
+        {loading ? (
+          <Spinner />
+        ) :(blog && <div className='flex flex-col w-[70%] overflow-hidden '>
             <h1 className='mt-1 text-3xl font-extrabold'>{blog.title}</h1>
             <div className='flex my-4 items-center font-semibold'>
                 <small>{dateFormat(blog.createdon,"dddd, mmmm dS, yyyy, h:MM TT")} |&nbsp;</small>
@@ -117,7 +122,7 @@ const Blog = () => {
               <p className='text-gray-600'>No comments yet. </p>
             )}
             </div>
-        </div>}
+        </div>)}
     </div>
   )
 }

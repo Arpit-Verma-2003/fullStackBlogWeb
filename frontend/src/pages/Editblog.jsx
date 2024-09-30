@@ -5,6 +5,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { uploadImage, getBlogById, fetchCategories,checkLogin, updateBlog } from '../../Api/Api'
 import { useNavigate, useParams } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+import Spinner from '../components/Spinner';
+
 const Editblog = () => {
     const blankBlog = {
         "author" : "",
@@ -121,7 +123,7 @@ const Editblog = () => {
         return <h2 className='text-2xl font-bold text-center text-gray-800 my-5 bg-red-100 rounded-lg shadow-lg py-3 px-6'>Access Denied</h2>;
     }
     if (loading) {
-        return <div>Loading...</div>;
+        return <Spinner/>;
     }
     return (
     <div className='flex w-full items-center justify-center'>

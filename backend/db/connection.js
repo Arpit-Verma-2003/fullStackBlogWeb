@@ -2,15 +2,12 @@ const pg = require('pg');
 const { Client } = pg;
 require("dotenv").config();
 const client = new Client({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    host: 'localhost',
-    port: 5432,
-    database: 'blogapp',
+    connectionString: process.env.POSTGRES_URL,
   })
 
 async function name() {
-    await client.connect()
+    await client.connect();
+    await client.query('SET search_path TO public');
 }
 name();
 module.exports = client;

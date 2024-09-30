@@ -2,15 +2,18 @@ import React, { useContext, useEffect, useState } from 'react'
 import { checkLogin } from '../../Api/Api';
 import { Link } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+import Spinner from '../components/Spinner';
 const Profile = () => {
     const loginVar = useContext(LoginContext);
     const [name,setName] = useState("");
     const [userRole,setUserRole] = useState("");
     const [content,setContent] = useState("");
     const [permissions,setPermissions] = useState([]);
+    const [loading,setLoading] = useState(true);
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchData = async () => {
+          setLoading(true);
           const response = await checkLogin();
           if (!response.valid) {
             setName("Guest");
@@ -30,11 +33,15 @@ const Profile = () => {
                 setContent("Hence, You can only View blogs and don't have other permissions");
             }
           }
+          setLoading(false);
         };
     
         fetchData();
       }, [loginVar]);
       const hasPermission = (permissionName) => permissions.includes(permissionName);
+  if (loading) { 
+    return <Spinner />;
+  }
   if(loginVar === null){
     return <div>Loading...</div>
   }
