@@ -87,6 +87,16 @@ export const getPermissions = async ()=>{
   }
 }
 
+export const getPermissionsByRole = async (roleId) => {
+  try {
+    const result = await axios.post(`${apiUrl}/api/permissions`, { roleId });
+    return result.data;
+  } catch (err) {
+    console.error('Error fetching permissions:', err);
+    throw err; 
+  }
+};
+
 export const checkAdmin = () =>{
   return axios.get(apiUrl+"/checkAdmin")
   .then(result=>{
