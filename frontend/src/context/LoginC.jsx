@@ -5,14 +5,11 @@ export const LoginProvider = (props) => {
     const [login,setLogin] = useState(null);
     const [cpermissions,setCPermissions] = useState([]);
     const [uid,setUid] = useState(null);
+    const [roleId,setRoleId] = useState(null);
+    const [userName,setUserName] = useState("");
     const fetchLoginData = async () => {
         const response = await checkLogin();
-        if (response.valid){
-            setLogin(true);
-            setUid(response.id);
-        } 
-        else setLogin(false);
-        setCPermissions(response.permissions);
+        // setCPermissions(response.permissions);
     };
     useEffect(() => {
         fetchLoginData();
@@ -23,7 +20,7 @@ export const LoginProvider = (props) => {
         }
     }, [login]);
     return(
-        <LoginContext.Provider value={{login,setLogin,cpermissions,setCPermissions,uid}}>
+        <LoginContext.Provider value={{login,setLogin,cpermissions,setCPermissions,uid,setUid,roleId,setRoleId,userName,setUserName}}>
             {props.children}
         </LoginContext.Provider>
     )
