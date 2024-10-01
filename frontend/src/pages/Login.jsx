@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../context/LoginC';
+import { getPermissionsByRole } from '../../Api/Api';
 const apiUrl = "https://blog-backend-hcqx.onrender.com";
 
 const Login = () => {
@@ -29,8 +30,15 @@ axios.defaults.withCredentials = true;
     try {
       const res = await axios.post(`${apiUrl}/api/login`, formData);
       Swal.fire("Login Successful");
+      const userAbout = res.data.userDetails;
+      loginVar.setUid(userAbout.id);
+      loginVar.setRoleId(userAbout.role);
+      loginVar.setUserName(userAbout.username);
       setSuccess("Login Successful Redirecting To Home Page");
       loginVar.setLogin(true);
+      const permissionsRole = await getPermissionsByRole(userAbout.role);
+      loginVar.setCPermissions(permissionsRole.permissions);
+      console.log(loginVar);
       setTimeout(() => {
         navigate('/');
       }, 1000);
