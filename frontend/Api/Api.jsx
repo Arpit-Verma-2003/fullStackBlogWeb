@@ -165,9 +165,9 @@ export const deleteBlog = async (blogId) => {
   }
 };
 
-export const getBlogsByAuthor = (search = '') => {
+export const getBlogsByAuthor = (search = '',uid) => {
   return axios
-    .get(apiUrl + `/author/blogs?search=${search}`)
+    .get(apiUrl + `/author/blogs?search=${search}&uid=${uid}`)
     .then(result => {
       return result.data;
     })
