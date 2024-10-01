@@ -62,7 +62,7 @@ const Blog = () => {
   });
     if ((await confirmedDelete).isConfirmed) {
       try {
-        await deleteComment(commentId, userId);
+        await deleteComment(commentId, userId,details.roleId);
         Swal.fire("Comment Deleted Successfully");
         const commentsData = await getCommentsByBlogId(id);
         setComments(commentsData.data);
