@@ -104,6 +104,21 @@ app.get('/permissions',async(req,res)=>{
   }
 })
 
+app.post('/api/permissions', async (req, res) => {
+  const { roleId } = req.body;
+  try {
+    const result = await client.query(queries.getRolePermissions, [roleId]);
+    const permissions = result.rows.map(row => row.permission_name);
+    return res.json({
+      valid: true,
+      permissions: permissions
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error fetching role permissions' });
+  }
+});
+
 app.get('/users', async (req, res) => {
   try {
     const result = await client.query(queries.fetchUsers);
