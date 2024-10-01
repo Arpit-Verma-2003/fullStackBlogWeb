@@ -315,8 +315,6 @@ app.post('/blogsimage', upload.single('file'), function (req, res, next) {
 
 app.delete('/api/blogs/:id', async (req, res) => {
   const blogId = req.params.id;
-  const userId = req.session.user.id; 
-  
     const result = await client.query('DELETE FROM blogs WHERE id = $1 RETURNING *', [blogId]);
     if (result.rows.length > 0) {
       res.json({ valid: true, message: "Blog deleted" });
