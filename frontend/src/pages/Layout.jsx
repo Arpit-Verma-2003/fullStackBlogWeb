@@ -50,6 +50,9 @@ const Layout = () => {
           console.log("Logout successful");
           loginVar.setLogin(false);
           loginVar.setCPermissions([]);
+          loginVar.setUid(null);
+          loginVar.setRoleId(null);
+          loginVar.setUserName("");
           setCheckLoginAccess(false);
           setPermissions([]);
           navigate('/login');
