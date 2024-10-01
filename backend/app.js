@@ -199,8 +199,7 @@ app.post('/comments',async(req,res)=>{
 app.delete('/comments/:commentId', async (req, res) => {
   const userId = req.body.user_id;
   const commentId = req.body.comment_id;
-  if(req.session.user){
-    const roleId = req.session.user.role;
+  const roleId = req.body.role_id;
     try {
       const result1 = await client.query(queries.getRolePermissions,[roleId]);
       const userPermissions = result1.rows.map(row => row.permission_name);
@@ -221,7 +220,6 @@ app.delete('/comments/:commentId', async (req, res) => {
       console.error('Error deleting comment:', error);
       res.status(500).json({ message: 'Error deleting comment.' });
     }
-  }
 });
 
 app.post('/api/logout', (req, res) => {
