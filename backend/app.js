@@ -172,7 +172,10 @@ app.put('/blogs/:id',async(req,res)=>{
 })
 
 app.post('/roles',async(req,res)=>{
-  const {roleName,permissionIds} = req.body;
+  const newRole = req.body;
+  const roleName = newRole.roleName;
+  const permissionIds = newRole.permissionIds;
+  console.log(roleName,permissionIds);
   try {
     const result = await client.query(queries.addRole,[roleName]);
     const roleId = result.rows[0].id;
@@ -181,9 +184,11 @@ app.post('/roles',async(req,res)=>{
     }
     res.status(201).json({message:"Added a new role successfully"});
   } catch (error) {
+    console.log(error);
     res.status(500).json({message:"Unable to add the new role",err:error});
   }
 })
+
 
 app.post('/comments',async(req,res)=>{
   const{blog_id,user_id,content} = req.body;
