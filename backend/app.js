@@ -299,11 +299,9 @@ app.get('/blogsbyid/:id',async (req,res)=>{
 
 app.get('/author/blogs', async (req, res) => {
   const search = req.query.search || '';
-  if(req.session.user){
-    const userId = req.session.user.id;
-    const result = await client.query(queries.getBlogsByAuthorId, [userId,`%${search}%`]);
-    return res.json({ valid: true, data: result.rows });
-  }
+  const userId = req.query.uid;
+  const result = await client.query(queries.getBlogsByAuthorId, [userId,`%${search}%`]);
+  return res.json({ valid: true, data: result.rows });
 });
 
 app.post('/blogs',async (req,res)=>{
