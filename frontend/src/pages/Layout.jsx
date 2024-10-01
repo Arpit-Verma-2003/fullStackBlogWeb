@@ -19,14 +19,9 @@ const Layout = () => {
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
-      const checkLogined = await checkLogin();
-      if(!checkLogined.valid){
-        console.log("You are not logined");
-      }
-      else{
-        setCheckLoginAccess(true);
-        setPermissions(checkLogined.permissions);
-      } 
+      console.log(loginVar);
+      if(loginVar.login) setCheckLoginAccess(true);
+      setPermissions(loginVar.cpermissions);
       const fetchedCategories = await fetchCategories();
       if(fetchedCategories){
         setCategories(fetchedCategories.data);
