@@ -23,8 +23,7 @@ const Blog = () => {
       setBlog(allBlogs.data[0]);
       const commentsData = await getCommentsByBlogId(id);
       setComments(commentsData.data);
-      const uid = await getUserId();
-      setUserId(uid.userId);
+      setUserId(details.uid);
       setLoading(false);
     }
     fetchData();
